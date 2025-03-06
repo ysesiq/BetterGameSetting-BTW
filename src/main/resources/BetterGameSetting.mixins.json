@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "package": "cn.xylose.btw.bettergamesetting.mixin.common",
+  "compatibilityLevel": "JAVA_17",
+  "target": "DEFAULT",
+  "minVersion": "0.8.3",
+  "client": [
+    "client.EnumOptionsMixin",
+    "client.FontRendererMixin",
+    "client.GameSettingsMixin",
+    "client.KeyBindingMixin",
+    "client.MinecraftMixin",
+    "client.gui.GuiOptionsMixin",
+    "client.gui.GuiSlotMixin",
+    "client.gui.GuiVideoSettingsMixin",
+    "client.renderer.RenderGlobalMixin",
+    "client.renderer.RenderMixin",
+    "entity.EntityRenderMixin",
+    "client.resources.ResourcePackRepositoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

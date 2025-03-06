@@ -1,0 +1,14 @@
+accessWidener v2 named
+accessible field net/minecraft/src/GuiSlot left I
+accessible field net/minecraft/src/GuiSlot width I
+accessible field net/minecraft/src/GuiSlot amountScrolled F
+accessible field net/minecraft/src/GuiSlot field_77242_t I
+accessible field net/minecraft/src/GuiScreen mc Lnet/minecraft/src/Minecraft;
+accessible class net/minecraft/src/GuiScreenTemporaryResourcePackSelectSelectionList
+accessible field net/minecraft/src/Minecraft mcResourcePackRepository Lnet/minecraft/src/ResourcePackRepository;
+accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/SoundSystem;
+accessible method net/minecraft/src/GuiSlot bindAmountScrolled ()V
+accessible field net/minecraft/src/GuiSlot field_77243_s Z
+accessible field net/minecraft/src/GuiSlot showSelectionBox Z
+accessible field net/minecraft/src/GameSettings renderDistance I
+accessible field net/minecraft/src/GuiSlot right I
