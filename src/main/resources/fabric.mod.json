@@ -34,6 +34,9 @@
   "accessWidener": "BetterGameSetting.accesswidener",
   "custom": {
     "loom:injected_interfaces": {
+      "net/minecraft/src/GameSettings": [
+        "cn/xylose/btw/bettergamesetting/api/IGameSetting"
+      ]
     },
     "modmenu:clientsideOnly": true
   }

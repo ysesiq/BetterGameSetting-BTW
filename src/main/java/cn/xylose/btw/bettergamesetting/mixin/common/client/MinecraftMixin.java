@@ -11,7 +11,7 @@ public class MinecraftMixin {
     @Shadow public GameSettings gameSettings;
     @Shadow public GuiScreen currentScreen;
 
-    @Inject(method = "runGameLoop", at = @At("TAIL"))
+    @Inject(method = "runGameLoop", at = @At("HEAD"))
     private void inject(CallbackInfo ci) {
         if (this.gameSettings.limitFramerate < 10)
             this.gameSettings.limitFramerate = 120;

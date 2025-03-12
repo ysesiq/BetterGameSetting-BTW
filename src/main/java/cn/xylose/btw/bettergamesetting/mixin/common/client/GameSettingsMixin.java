@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
+import cn.xylose.btw.bettergamesetting.util.OptionHelper;
 import com.google.gson.Gson;
 //import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 //import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -19,7 +20,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(value = GameSettings.class, remap = false)
+import static cn.xylose.btw.bettergamesetting.util.OptionHelper.gson;
+
+@Mixin(value = GameSettings.class)
 public abstract class GameSettingsMixin implements IGameSetting {
     @Shadow private File optionsFile;
     @Shadow public int renderDistance;
@@ -32,29 +35,14 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Shadow public abstract void saveOptions();
     @Shadow public abstract float getOptionFloatValue(EnumOptions par1EnumOptions);
     @Shadow protected Minecraft mc;
-    @Unique public float recordVolume = 1.0F;
-    @Unique public float weatherVolume = 1.0F;
-    @Unique public float blockVolume = 1.0F;
-    @Unique public float hostileVolume = 1.0F;
-    @Unique public float neutralVolume = 1.0F;
-    @Unique public float playerVolume = 1.0F;
-    @Unique public float ambientVolume = 1.0F;
-    @Unique private static final Gson gson = new Gson();
+//    @Unique public float recordVolume = 1.0F;
+//    @Unique public float weatherVolume = 1.0F;
+//    @Unique public float blockVolume = 1.0F;
+//    @Unique public float hostileVolume = 1.0F;
+//    @Unique public float neutralVolume = 1.0F;
+//    @Unique public float playerVolume = 1.0F;
+//    @Unique public float ambientVolume = 1.0F;
     @Unique public List<String> resourcePacks = new ArrayList<>();
-    @Unique private static final ParameterizedType typeListString = new ParameterizedType() {
-        public Type[] getActualTypeArguments()
-        {
-            return new Type[] {String.class};
-        }
-        public Type getRawType()
-        {
-            return List.class;
-        }
-        public Type getOwnerType()
-        {
-            return null;
-        }
-    };
 
 //    @Inject(method = "<init>(Lnet/minecraft/src/Minecraft;Ljava/io/File;)V", at = @At("RETURN"))
 //    private void newDefaultValue(Minecraft par1Minecraft, File par2File, CallbackInfo ci) {
@@ -207,41 +195,36 @@ public abstract class GameSettingsMixin implements IGameSetting {
                     this.fovSetting = this.parseFloat(astring[1]);
                 }
                 if (astring[0].equals("resourcePacks")) {
-                    this.resourcePacks = (List) gson.fromJson(s.substring(s.indexOf(58) + 1), typeListString);
+                    this.resourcePacks = (List) gson.fromJson(s.substring(s.indexOf(58) + 1), OptionHelper.typeListString);
                     if (this.resourcePacks == null) {
                         this.resourcePacks = new ArrayList();
                     }
                 }
-                if (astring[0].equals("record")) {
-                    this.recordVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("weather")) {
-                    this.weatherVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("block")) {
-                    this.blockVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("hostile")) {
-                    this.hostileVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("neutral")) {
-                    this.neutralVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("player")) {
-                    this.playerVolume = this.parseFloat(astring[1]);
-                }
-                if (astring[0].equals("ambient")) {
-                    this.ambientVolume = this.parseFloat(astring[1]);
-                }
+//                if (astring[0].equals("record")) {
+//                    this.recordVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("weather")) {
+//                    this.weatherVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("block")) {
+//                    this.blockVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("hostile")) {
+//                    this.hostileVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("neutral")) {
+//                    this.neutralVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("player")) {
+//                    this.playerVolume = this.parseFloat(astring[1]);
+//                }
+//                if (astring[0].equals("ambient")) {
+//                    this.ambientVolume = this.parseFloat(astring[1]);
+//                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Inject(method = "loadOptions", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;gammaSetting:F", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void loadGammaOptions(CallbackInfo ci, BufferedReader var1, String var2, String[] var3) {
-        this.gammaSetting = this.parseFloat(var3[1]);
     }
 
 //    @ModifyConstant(method = "saveOptions", constant = @Constant(stringValue = "viewDistance:"))
@@ -262,13 +245,13 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Inject(method = "saveOptions", at = @At(value = "INVOKE", target = "Ljava/io/PrintWriter;println(Ljava/lang/String;)V", ordinal = 40), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void saveExtraOption(CallbackInfo ci, PrintWriter printwriter) {
         printwriter.println("resourcePacks:" + gson.toJson(this.resourcePacks));
-        printwriter.println("record:" + this.recordVolume);
-        printwriter.println("weather:" + this.weatherVolume);
-        printwriter.println("block:" + this.blockVolume);
-        printwriter.println("hostile:" + this.hostileVolume);
-        printwriter.println("neutral:" + this.neutralVolume);
-        printwriter.println("player:" + this.playerVolume);
-        printwriter.println("ambient:" + this.ambientVolume);
+//        printwriter.println("record:" + this.recordVolume);
+//        printwriter.println("weather:" + this.weatherVolume);
+//        printwriter.println("block:" + this.blockVolume);
+//        printwriter.println("hostile:" + this.hostileVolume);
+//        printwriter.println("neutral:" + this.neutralVolume);
+//        printwriter.println("player:" + this.playerVolume);
+//        printwriter.println("ambient:" + this.ambientVolume);
     }
 
     /**
@@ -319,40 +302,40 @@ public abstract class GameSettingsMixin implements IGameSetting {
         this.saveOptions();
     }
 
-    @Override
-    public float getRecordVolume() {
-        return this.recordVolume;
-    }
-
-    @Override
-    public float getWeatherVolume() {
-        return this.weatherVolume;
-    }
-
-    @Override
-    public float getBlockVolume() {
-        return this.blockVolume;
-    }
-
-    @Override
-    public float getHostileVolume() {
-        return this.hostileVolume;
-    }
-
-    @Override
-    public float getNeutralVolume() {
-        return this.neutralVolume;
-    }
-
-    @Override
-    public float getPlayerVolume() {
-        return this.playerVolume;
-    }
-
-    @Override
-    public float getAmbientVolume() {
-        return this.ambientVolume;
-    }
+//    @Override
+//    public float getRecordVolume() {
+//        return this.recordVolume;
+//    }
+//
+//    @Override
+//    public float getWeatherVolume() {
+//        return this.weatherVolume;
+//    }
+//
+//    @Override
+//    public float getBlockVolume() {
+//        return this.blockVolume;
+//    }
+//
+//    @Override
+//    public float getHostileVolume() {
+//        return this.hostileVolume;
+//    }
+//
+//    @Override
+//    public float getNeutralVolume() {
+//        return this.neutralVolume;
+//    }
+//
+//    @Override
+//    public float getPlayerVolume() {
+//        return this.playerVolume;
+//    }
+//
+//    @Override
+//    public float getAmbientVolume() {
+//        return this.ambientVolume;
+//    }
 
     @Override
     public List<String> getResourcePacks() {

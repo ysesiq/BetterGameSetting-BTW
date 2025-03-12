@@ -1,4 +1,4 @@
-package cn.xylose.btw.bettergamesetting.client;
+package cn.xylose.btw.bettergamesetting.util;
 
 import com.google.common.base.Function;
 import net.minecraft.src.ResourcePack;

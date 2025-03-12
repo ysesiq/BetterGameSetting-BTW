@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(value = EntityRenderer.class, priority = 9999, remap = false)
+@Mixin(value = EntityRenderer.class, priority = 9999)
 public abstract class EntityRenderMixin {
     @Shadow
     private float farPlaneDistance;
@@ -56,7 +56,7 @@ public abstract class EntityRenderMixin {
         return 16;
     }
 
-    @Inject(method = "setupCameraTransform", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glLoadIdentity()V", shift = At.Shift.AFTER))
+    @Inject(method = "setupCameraTransform", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityRenderer;farPlaneDistance:F", shift = At.Shift.AFTER))
     private void setupCameraTransform0(float par1, int par2, CallbackInfo ci) {
         this.farPlaneDistance = this.mc.gameSettings.renderDistance * 16;
     }
