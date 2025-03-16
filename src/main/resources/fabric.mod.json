@@ -14,29 +14,37 @@
     "Xy_Lose"
   ],
   "contributors": [
-    "jaredlll08"
+    "jaredlll08",
+    "ThexXTURBOXx"
   ],
   "contact": {
-    "homepage": "https://github.com/ysesiq/BetterGameSetting",
-    "issues": "https://github.com/ysesiq/BetterGameSetting/issues"
+    "homepage": "https://github.com/ysesiq/BetterGameSetting-BTW",
+    "issues": "https://github.com/ysesiq/BetterGameSetting-BTW/issues"
   },
   "entrypoints": {
+    "preLaunch": [
+      "cn.xylose.btw.bettergamesetting.init.BGSEarlyRiser"
+    ],
     "client": [
-      "cn.xylose.btw.bettergamesetting.init.BetterGameSettingClient"
+      "cn.xylose.btw.bettergamesetting.init.BGSClient"
     ],
     "btw:addon": [
-      "cn.xylose.btw.bettergamesetting.init.BetterGameSettingClient"
+      "cn.xylose.btw.bettergamesetting.init.BGSClient"
     ]
   },
   "mixins": [
     "BetterGameSetting.mixins.json"
   ],
+  "jars": [
+    {
+      "file": "META-INF/jars/Fabric-ASM-v2.3.jar"
+    }
+  ],
   "accessWidener": "BetterGameSetting.accesswidener",
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/src/GameSettings": [
-        "cn/xylose/btw/bettergamesetting/api/IGameSetting"
-      ]
+      "net/minecraft/src/EnumOptions": ["cn/xylose/btw/bettergamesetting/api/IEnumOptions"],
+      "net/minecraft/src/GameSettings": ["cn/xylose/btw/bettergamesetting/api/IGameSetting"]
     },
     "modmenu:clientsideOnly": true
   }

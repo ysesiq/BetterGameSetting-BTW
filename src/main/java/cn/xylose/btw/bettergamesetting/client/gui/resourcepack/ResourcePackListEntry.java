@@ -2,16 +2,16 @@ package cn.xylose.btw.bettergamesetting.client.gui.resourcepack;
 
 import java.util.List;
 
-import cn.xylose.btw.bettergamesetting.client.gui.GuiExtra;
-import cn.xylose.btw.bettergamesetting.client.gui.GuiListExtended;
-import cn.xylose.btw.bettergamesetting.init.BetterGameSettingClient;
+import cn.xylose.btw.bettergamesetting.client.gui.base.GuiExtra;
+import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
+import cn.xylose.btw.bettergamesetting.init.BGSClient;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Gui;
 import net.minecraft.src.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListEntry {
-    static final ResourceLocation RESOURCE_PACKS_TEXTURE = new ResourceLocation(BetterGameSettingClient.resourceID, "textures/gui/resource_packs.png");
+    static final ResourceLocation RESOURCE_PACKS_TEXTURE = new ResourceLocation(BGSClient.resourceId, "textures/gui/resource_packs.png");
     protected final Minecraft mc;
     protected final GuiScreenResourcePacks resourcePacksGUI;
 

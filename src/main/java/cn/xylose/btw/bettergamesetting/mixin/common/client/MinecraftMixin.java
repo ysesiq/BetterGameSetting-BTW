@@ -13,11 +13,11 @@ public class MinecraftMixin {
 
     @Inject(method = "runGameLoop", at = @At("HEAD"))
     private void inject(CallbackInfo ci) {
-        if (this.gameSettings.limitFramerate < 10)
+        if (this.gameSettings.limitFramerate < 10 || this.gameSettings.limitFramerate > 260)
             this.gameSettings.limitFramerate = 120;
-        if (this.gameSettings.fovSetting < 30)
+        if (this.gameSettings.fovSetting < 30 || this.gameSettings.fovSetting > 110)
             this.gameSettings.fovSetting = 70;
-        if (this.gameSettings.renderDistance < 2)
+        if (this.gameSettings.renderDistance < 2 || this.gameSettings.renderDistance > 24)
             this.gameSettings.renderDistance = 12;
     }
 
@@ -30,7 +30,7 @@ public class MinecraftMixin {
         if (this.currentScreen != null && (this.currentScreen instanceof GuiMainMenu)) {
             return 24;
         }
-        if (!(this.gameSettings.limitFramerate >= 260)) {
+        if (this.gameSettings.limitFramerate <= 260) {
             return this.gameSettings.limitFramerate;
         }
         return 9999;

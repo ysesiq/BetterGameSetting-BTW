@@ -39,4 +39,8 @@ public interface IGameSetting {
     default List<String> getResourcePacks() {
         return null;
     }
+
+    default boolean isForceUnicodeFont() {
+        return false;
+    }
 }

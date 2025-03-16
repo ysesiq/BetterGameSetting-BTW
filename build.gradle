@@ -25,6 +25,10 @@ repositories {
 		url = 'https://maven.glass-launcher.net/babric'
 	}
 	maven {
+		name = "Spongepowered"
+		url = "https://repo.spongepowered.org/repository/maven-public/"
+	}
+	maven {
 		url file('mavenRepo')
 	}
 	mavenCentral() //For fastutil
@@ -65,6 +69,8 @@ dependencies {
 	implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.5.12'
 
 	implementation 'org.apache.commons:commons-lang3:3.13.0'
+
+	implementation files("libs\\Fabric-ASM-v2.3__.jar")
 }
 
 configurations {
@@ -103,6 +109,9 @@ java {
 jar {
 	from sourceSets.main.output.resourcesDir
 	from sourceSets.main.output.classesDirs
+	into('META-INF\\jars') {
+		from("libs\\Fabric-ASM-v2.3.jar")
+	}
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}

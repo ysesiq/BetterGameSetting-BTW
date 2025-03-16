@@ -1,50 +1,28 @@
-package cn.xylose.btw.bettergamesetting.mixin.common.entity;
+package cn.xylose.btw.bettergamesetting.mixin.common.client.renderer;
 
-//import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-//import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-//import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-//import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-//import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(value = EntityRenderer.class, priority = 9999)
+@Mixin(value = EntityRenderer.class, priority = 999)
 public abstract class EntityRenderMixin {
-    @Shadow
-    private float farPlaneDistance;
-    @Shadow
-    private Minecraft mc;
-
-    @Shadow
-    protected abstract void setupFog(int par1, float par2);
-
-    @Shadow
-    private float fogColorRed;
-    @Shadow
-    private float fogColorGreen;
-    @Shadow
-    private float fogColorBlue;
-
-    @Shadow
-    public int debugViewDirection;
-
-    @Shadow
-    private float prevDebugCamFOV;
-
-    @Shadow
-    private float debugCamFOV;
-
-    @Shadow
-    private float fovModifierHandPrev;
-
-    @Shadow
-    private float fovModifierHand;
+    @Shadow private float farPlaneDistance;
+    @Shadow private Minecraft mc;
+    @Shadow protected abstract void setupFog(int par1, float par2);
+    @Shadow float fogColorRed;
+    @Shadow float fogColorGreen;
+    @Shadow float fogColorBlue;
+    @Shadow private float prevDebugCamFOV;
+    @Shadow private float debugCamFOV;
+    @Shadow private float fovModifierHandPrev;
+    @Shadow private float fovModifierHand;
 
     @ModifyConstant(method = "updateRenderer", constant = @Constant(intValue = 3))
     private int modifyRD(int constant) {
@@ -79,18 +57,11 @@ public abstract class EntityRenderMixin {
         this.fogColorBlue += (var8 - this.fogColorBlue) * var4_1;
     }
 
-//    @ModifyExpressionValue(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GameSettings;renderDistanceI"))
-//    private int modifyRenderDistance(int original) {
-//        if (original >= 4)
-//            return 1;
-//        return original;
-//    }
-
-    @Redirect(method = "updateFogColor", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;renderDistance:I"))
-    private int modifyRenderDistance(GameSettings instance) {
-        if (instance.renderDistance >= 4)
+    @ModifyExpressionValue(method = "updateFogColor", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;renderDistance:I"))
+    private int modifyRenderDistance(int original) {
+        if (original >= 4)
             return 1;
-        return instance.renderDistance;
+        return original;
     }
 
     /**
@@ -110,41 +81,13 @@ public abstract class EntityRenderMixin {
 //        this.mc.theWorld.playSound(v, par1, par3, par5, ((IGameSetting) Minecraft.getMinecraft().gameSettings).getWeatherVolume() * par7Str, par8, par9);
 //    }
 
-
-//    @ModifyReturnValue(method = "getFOVModifier", at = @At(value = "RETURN", ordinal = 1))
-//    private float getFOVModifierModern(float original, @Local(argsOnly = true) float par1, @Local(argsOnly = true) boolean par2, @Local(name = "var4") float var4) {
-//        if (par2) {
-//            var4 = this.mc.gameSettings.fovSetting;
-//            var4 *= this.fovModifierHandPrev + (this.fovModifierHand - this.fovModifierHandPrev) * par1;
-//            return var4 + this.prevDebugCamFOV + (this.debugCamFOV - this.prevDebugCamFOV) * par1;
-//        }
-//        return original;
-//    }
-
-    @Inject(
-            method = "getFOVModifier",
-            at = @At("TAIL"),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void injectFOVModifier(float par1, boolean par2, CallbackInfoReturnable<Float> cir, EntityPlayer var3, float var4, int var6) {
-        cir.cancel();
-
+    @ModifyReturnValue(method = "getFOVModifier", at = @At(value = "RETURN", ordinal = 1))
+    private float getFOVModifierModern(float original, @Local(argsOnly = true) float par1, @Local(argsOnly = true) boolean par2, @Local(name = "var4") float var4) {
         if (par2) {
             var4 = this.mc.gameSettings.fovSetting;
             var4 *= this.fovModifierHandPrev + (this.fovModifierHand - this.fovModifierHandPrev) * par1;
+            return var4 + this.prevDebugCamFOV + (this.debugCamFOV - this.prevDebugCamFOV) * par1;
         }
-
-        if (this.mc.renderViewEntity.getHealth() <= 0.0f) {
-            float var5 = (float) this.mc.renderViewEntity.deathTime + par1;
-            var4 /= (1.0f - 500.0f / (var5 + 500.0f)) * 2.0f + 1.0f;
-        }
-
-        if (var6 != 0 && Block.blocksList[var6].blockMaterial == Material.water) {
-            var4 = var4 * 60.0f / 70.0f;
-        }
-
-        float result = var4 + this.prevDebugCamFOV + (this.debugCamFOV - this.prevDebugCamFOV) * par1;
-        cir.setReturnValue(result);
+        return original;
     }
 }

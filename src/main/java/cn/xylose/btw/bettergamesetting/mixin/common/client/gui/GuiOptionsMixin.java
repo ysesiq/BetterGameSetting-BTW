@@ -1,6 +1,7 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client.gui;
 
 import cn.xylose.btw.bettergamesetting.client.gui.GuiSoundSetting;
+import cn.xylose.btw.bettergamesetting.client.gui.GuiVideoSettings;
 import cn.xylose.btw.bettergamesetting.client.gui.controls.GuiNewControls;
 import cn.xylose.btw.bettergamesetting.client.gui.resourcepack.GuiScreenResourcePacks;
 import net.minecraft.src.*;
@@ -31,6 +32,10 @@ public class GuiOptionsMixin extends GuiScreen {
             if (par1GuiButton.id == 100) {
                 this.mc.gameSettings.saveOptions();
                 this.mc.displayGuiScreen(new GuiNewControls(this, this.options));
+            }
+            if (par1GuiButton.id == 101) {
+                this.mc.gameSettings.saveOptions();
+                this.mc.displayGuiScreen(new GuiVideoSettings(this, this.options));
             }
             if (par1GuiButton.id == 105) {
                 this.mc.gameSettings.saveOptions();

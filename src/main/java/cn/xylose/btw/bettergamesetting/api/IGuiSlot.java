@@ -20,4 +20,11 @@ public interface IGuiSlot {
     }
 
     default void drawDarkenedBackground(int layer) {}
+
+    default int getListWidth() {
+        return 0;
+    }
+
+    default void setListWidth(int listWidth) {
+    }
 }

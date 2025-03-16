@@ -38,6 +38,8 @@ public abstract class GuiSlotMixin implements IGuiSlot {
     @Shadow protected abstract void func_77222_a(int par1, int par2, Tessellator par3Tessellator);
     @Shadow protected abstract void overlayBackground(int par1, int par2, int par3, int par4);
 
+    @Unique private int listWidth = 220;
+
     public GuiSlotMixin(int slotHeight) {
         this.slotHeight = slotHeight;
     }
@@ -49,8 +51,8 @@ public abstract class GuiSlotMixin implements IGuiSlot {
 
     @Override
     public int getSlotIndexFromScreenCoords(int p_148124_1_, int p_148124_2_) {
-        int i = this.left + this.width / 2 - 220 / 2;
-        int j = this.left + this.width / 2 + 220 / 2;
+        int i = this.left + this.width / 2 - this.getListWidth() / 2;
+        int j = this.left + this.width / 2 + this.getListWidth() / 2;
         int k = p_148124_2_ - this.top - this.field_77242_t + (int) this.amountScrolled - 4;
         int l = k / this.slotHeight;
         return p_148124_1_ < this.getScrollBarX() && p_148124_1_ >= i && p_148124_1_ <= j && l >= 0 && k >= 0 && l < 88888 ? l : -1;
@@ -65,8 +67,8 @@ public abstract class GuiSlotMixin implements IGuiSlot {
     public void handleMouseInput() {
         if (this.isMouseYWithinSlotBounds(this.mouseY)) {
             if (Mouse.getEventButton() == 0 && Mouse.getEventButtonState() && this.mouseY >= this.top && this.mouseY <= this.bottom) {
-                int i = (this.width - 220) / 2;
-                int j = (this.width + 220) / 2;
+                int i = (this.width - this.getListWidth()) / 2;
+                int j = (this.width + this.getListWidth()) / 2;
                 int k = this.mouseY - this.top - this.field_77242_t + (int) this.amountScrolled - 4;
                 int l = k / this.slotHeight;
 
@@ -88,8 +90,8 @@ public abstract class GuiSlotMixin implements IGuiSlot {
                     boolean flag1 = true;
 
                     if (this.mouseY >= this.top && this.mouseY <= this.bottom) {
-                        int j2 = (this.width - 220) / 2;
-                        int k2 = (this.width + 220) / 2;
+                        int j2 = (this.width - this.getListWidth()) / 2;
+                        int k2 = (this.width + this.getListWidth()) / 2;
                         int l2 = this.mouseY - this.top - this.field_77242_t + (int) this.amountScrolled - 4;
                         int i1 = l2 / this.slotHeight;
 
@@ -365,8 +367,14 @@ public abstract class GuiSlotMixin implements IGuiSlot {
         }
     }
 
+    @Override
     public int getListWidth() {
-        return 220;
+        return this.listWidth;
+    }
+
+    @Override
+    public void setListWidth(int listWidth) {
+        this.listWidth = listWidth;
     }
 
     protected void drawContainerBackground(Tessellator tessellator) {

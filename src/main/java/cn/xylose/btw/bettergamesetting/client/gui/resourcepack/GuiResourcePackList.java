@@ -1,6 +1,7 @@
 package cn.xylose.btw.bettergamesetting.client.gui.resourcepack;
 
-import cn.xylose.btw.bettergamesetting.client.gui.GuiListExtended;
+import cn.xylose.btw.bettergamesetting.api.IGuiSlot;
+import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import net.minecraft.src.EnumChatFormatting;
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Tessellator;
@@ -13,6 +14,7 @@ public abstract class GuiResourcePackList extends GuiListExtended {
 
     public GuiResourcePackList(Minecraft mcIn, int widthIn, int heightIn, List<ResourcePackListEntry> resourcePackList) {
         super(mcIn, widthIn, heightIn, 32, heightIn - 55 + 4, 36);
+        ((IGuiSlot) this).setListWidth(this.width);
         this.mc = mcIn;
         this.resourcePacksGUI = resourcePackList;
 //        this.field_148163_i = false;
@@ -23,9 +25,9 @@ public abstract class GuiResourcePackList extends GuiListExtended {
      * Handles drawing a list's header row.
      */
     @Override
-    public void func_77222_a(int p_148129_1_, int p_148129_2_, Tessellator p_148129_3_) {
+    public void func_77222_a(int x, int y, Tessellator tessellator) {
         String s = EnumChatFormatting.UNDERLINE + "" + EnumChatFormatting.BOLD + this.getListHeader();
-        this.mc.fontRenderer.drawString(s, p_148129_1_ + this.width / 2 - this.mc.fontRenderer.getStringWidth(s) / 2, Math.min(this.top + 3, p_148129_2_), 16777215);
+        this.mc.fontRenderer.drawString(s, x + this.width / 2 - this.mc.fontRenderer.getStringWidth(s) / 2, Math.min(this.top + 3, y), 16777215);
     }
 
     protected abstract String getListHeader();

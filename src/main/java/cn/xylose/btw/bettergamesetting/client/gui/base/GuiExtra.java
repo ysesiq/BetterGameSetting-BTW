@@ -1,4 +1,4 @@
-package cn.xylose.btw.bettergamesetting.client.gui;
+package cn.xylose.btw.bettergamesetting.client.gui.base;
 
 import net.minecraft.src.Gui;
 import net.minecraft.src.Tessellator;

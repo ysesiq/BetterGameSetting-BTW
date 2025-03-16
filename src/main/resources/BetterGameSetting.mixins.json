@@ -13,10 +13,11 @@
     "client.gui.GuiOptionsMixin",
     "client.gui.GuiSlotMixin",
     "client.gui.GuiVideoSettingsMixin",
+    "client.renderer.EntityRenderMixin",
     "client.renderer.RenderGlobalMixin",
     "client.renderer.RenderMixin",
-    "entity.EntityRenderMixin",
-    "client.resources.ResourcePackRepositoryMixin"
+    "client.resources.ResourcePackRepositoryMixin",
+    "client.OpenGlHelperMixin"
   ],
   "injectors": {
     "defaultRequire": 1

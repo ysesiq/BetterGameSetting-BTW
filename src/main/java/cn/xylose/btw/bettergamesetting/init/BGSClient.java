@@ -2,17 +2,22 @@ package cn.xylose.btw.bettergamesetting.init;
 
 import btw.AddonHandler;
 import btw.BTWAddon;
+import cn.xylose.btw.bettergamesetting.util.EnumExtends;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class BetterGameSettingClient extends BTWAddon implements ClientModInitializer {
-    public static String resourceID = "bgs";
+public class BGSClient extends BTWAddon implements ClientModInitializer {
+    public static String resourceId = "bgs";
 
     @Override
     public void postSetup() {
         this.modID = "better_game_setting";
         this.addonName = FabricLoader.getInstance().getModContainer(modID).get().getMetadata().getName();
-        this.shouldVersionCheck = false;
+    }
+
+    @Override
+    public void preInitialize() {
+//        EnumExtends.buildEnumExtending();
     }
 
     @Override
@@ -22,6 +27,6 @@ public class BetterGameSettingClient extends BTWAddon implements ClientModInitia
 
     @Override
     public void onInitializeClient() {
-        addResourcePackDomain(resourceID);
+        addResourcePackDomain(resourceId);
     }
 }
