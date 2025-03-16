@@ -6,6 +6,7 @@
 * Incorporated FontFixer mod
 * Optimized the scrollbar of the control gui
 * Optimized the code
+* Fixed compatibility issues with FreeLook mod
 * Fixed an issue where the mod's GuiSlot did not have a dark background when loading at the same time as some mods
 * Fixed an issue where when clicking on the new GuiSlot in this mod, the sound effect would not play
 * Fixed an issue where non-Mojangles (ASCII) fonts were not showing text shadows
