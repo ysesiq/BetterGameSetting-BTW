@@ -39,7 +39,6 @@ public abstract class GameSettingsMixin implements IGameSetting {
 //    @Unique public float playerVolume = 1.0F;
 //    @Unique public float ambientVolume = 1.0F;
     @Unique public List<String> resourcePacks = new ArrayList<>();
-    @Unique public boolean forceUnicodeFont;
 
 //    @Inject(method = "<init>(Lnet/minecraft/src/Minecraft;Ljava/io/File;)V", at = @At("RETURN"))
 //    private void newDefaultValue(Minecraft par1Minecraft, File par2File, CallbackInfo ci) {
@@ -56,7 +55,6 @@ public abstract class GameSettingsMixin implements IGameSetting {
         this.limitFramerate = 120;
         this.gammaSetting = 0.5F;
         this.fovSetting = 70.0F;
-        this.forceUnicodeFont = false;
     }
 
 //    @Inject(method = "setOptionValue", at = @At("TAIL"))
@@ -319,11 +317,6 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Override
     public List<String> getResourcePacks() {
         return this.resourcePacks;
-    }
-
-    @Override
-    public boolean isForceUnicodeFont() {
-        return this.forceUnicodeFont;
     }
 
 }

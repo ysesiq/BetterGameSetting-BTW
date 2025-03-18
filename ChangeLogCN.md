@@ -1,5 +1,12 @@
 # Better Game Setting for BTW
 
+### v1.3.0
+* 加入了输入法冲突修复（ https://github.com/lss233/InputMethodBlocker ）
+* 修复了FontFixer无法正常启用的问题
+* 修复了全角左括号“（”不显示的问题
+
+---
+
 ### v1.2.0
 * 加入了1.7.2+的视频设置界面
     * 考虑到兼容性（光影模组），不添加mipmap与各项异性过滤选项

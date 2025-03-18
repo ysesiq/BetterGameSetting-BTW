@@ -4,7 +4,8 @@
   "version": "${version}",
   "depends": {
     "minecraft": "1.6.4",
-    "btw": "*"
+    "btw": "*",
+    "modmenu": ">=10.0.0"
   },
   "environment": "client",
   "name": "BetterGameSetting-BTW",
@@ -15,7 +16,8 @@
   ],
   "contributors": [
     "jaredlll08",
-    "ThexXTURBOXx"
+    "ThexXTURBOXx",
+    "lss233"
   ],
   "contact": {
     "homepage": "https://github.com/ysesiq/BetterGameSetting-BTW",
@@ -23,13 +25,18 @@
   },
   "entrypoints": {
     "preLaunch": [
-      "cn.xylose.btw.bettergamesetting.init.BGSEarlyRiser"
+      "cn.xylose.btw.bettergamesetting.init.BGSEarlyRiser",
+      "com.github.skystardust.InputMethodBlocker.IMBlockerEarlyRiser"
     ],
     "client": [
-      "cn.xylose.btw.bettergamesetting.init.BGSClient"
+      "cn.xylose.btw.bettergamesetting.init.BGSClient",
+      "com.github.skystardust.InputMethodBlocker.InputMethodBlocker"
     ],
     "btw:addon": [
       "cn.xylose.btw.bettergamesetting.init.BGSClient"
+    ],
+    "modmenu": [
+      "cn.xylose.btw.bettergamesetting.config.BGSModMenuCompat"
     ]
   },
   "mixins": [

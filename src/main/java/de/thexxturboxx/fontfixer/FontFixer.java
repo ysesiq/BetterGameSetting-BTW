@@ -1,6 +1,6 @@
 package de.thexxturboxx.fontfixer;
 
-import cn.xylose.btw.bettergamesetting.api.IGameSetting;
+import cn.xylose.btw.bettergamesetting.config.BGSConfig;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
@@ -77,15 +77,15 @@ public class FontFixer {
         int var13;
         int var15;
         int var16;
-        for(var9 = 0; var9 < 256; ++var9) {
+        for (var9 = 0; var9 < 256; ++var9) {
             var10 = var9 % 16;
             var11 = var9 / 16;
 
-            for(var12 = 7; var12 >= 0; --var12) {
+            for (var12 = 7; var12 >= 0; --var12) {
                 var13 = var10 * 8 + var12;
                 boolean var14 = true;
 
-                for(var15 = 0; var15 < 8 && var14; ++var15) {
+                for (var15 = 0; var15 < 8 && var14; ++var15) {
                     var16 = (var11 * 8 + var15) * var19;
                     int var17 = var8[var13 + var16] & 255;
                     if (var17 > 0) {
@@ -108,7 +108,7 @@ public class FontFixer {
         this.fontTextureName = 1;
 //                par3RenderEngine.method_1417(var5);
 
-        for(var9 = 0; var9 < 32; ++var9) {
+        for (var9 = 0; var9 < 32; ++var9) {
             var10 = (var9 >> 3 & 1) * 85;
             var11 = (var9 >> 2 & 1) * 170 + var10;
             var12 = (var9 >> 1 & 1) * 170 + var10;
@@ -165,8 +165,9 @@ public class FontFixer {
 
     private void readGlyphSizes() {
         try {
-            InputStream var1 = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("font/glyph_sizes.bin")).getInputStream();
-            var1.read(this.glyphWidth);
+            InputStream inputstream = getResourceInputStream(new ResourceLocation("font/glyph_sizes.bin"));
+            inputstream.read(this.glyphWidth);
+            this.glyphWidth['（'] = 127;
         } catch (IOException var2) {
             throw new RuntimeException(var2);
         }
@@ -176,17 +177,17 @@ public class FontFixer {
         if (par2 == ' ') {
             return 4.0F;
         } else {
-            return (this.ASCII.indexOf(par2) != -1) && !((IGameSetting) Minecraft.getMinecraft().gameSettings).isForceUnicodeFont() ? this.renderDefaultChar(par1, par3) : this.renderUnicodeChar(par2, par3);
+            return (this.ASCII.indexOf(par2) != -1) && !BGSConfig.FORCE_UNICODE_FONT.getValue() ? this.renderDefaultChar(par1, par3) : this.renderUnicodeChar(par2, par3);
         }
     }
 
     private float renderDefaultChar(int par1, boolean par2) {
-        float var3 = (float)(par1 % 16 * 8);
-        float var4 = (float)(par1 / 16 * 8);
+        float var3 = (float) (par1 % 16 * 8);
+        float var4 = (float) (par1 / 16 * 8);
         float var5 = par2 ? 1.0F : 0.0F;
         this.renderEngine.bindTexture(this.locationFontTexture);
 
-        float var6 = (float)this.charWidth[par1] - 0.01F;
+        float var6 = (float) this.charWidth[par1] - 0.01F;
         GL11.glBegin(5);
         GL11.glTexCoord2f(var3 / 128.0F, var4 / 128.0F);
         GL11.glVertex3f(this.posX + var5, this.posY, 0.0F);
@@ -197,15 +198,15 @@ public class FontFixer {
         GL11.glTexCoord2f((var3 + var6) / 128.0F, (var4 + 7.99F) / 128.0F);
         GL11.glVertex3f(this.posX + var6 - var5, this.posY + 7.99F, 0.0F);
         GL11.glEnd();
-        return (float)this.charWidth[par1];
+        return (float) this.charWidth[par1];
     }
 
-    private ResourceLocation getUnicodePageLocation(int par1) {
-        if (unicodePageLocations[par1] == null) {
-            unicodePageLocations[par1] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", par1));
+    private ResourceLocation getUnicodePageLocation(int page) {
+        if (unicodePageLocations[page] == null) {
+            unicodePageLocations[page] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", page));
         }
 
-        return unicodePageLocations[par1];
+        return unicodePageLocations[page];
     }
 
     public final void loadGlyphTexture(int par1) {
@@ -220,10 +221,10 @@ public class FontFixer {
             this.loadGlyphTexture(var3);
             int var4 = this.glyphWidth[par1] >>> 4;
             int var5 = this.glyphWidth[par1] & 15;
-            float var6 = (float)var4;
-            float var7 = (float)(var5 + 1);
-            float var8 = (float)(par1 % 16 * 16) + var6;
-            float var9 = (float)((par1 & 255) / 16 * 16);
+            float var6 = (float) var4;
+            float var7 = (float) (var5 + 1);
+            float var8 = (float) (par1 % 16 * 16) + var6;
+            float var9 = (float) ((par1 & 255) / 16 * 16);
             float var10 = var7 - var6 - 0.02F;
             float var11 = par2 ? 1.0F : 0.0F;
             GL11.glBegin(5);
@@ -273,24 +274,24 @@ public class FontFixer {
             String[] var4 = new String[var3.length];
 
             int var7;
-            for(int var5 = 0; var5 < var3.length; ++var5) {
+            for (int var5 = 0; var5 < var3.length; ++var5) {
                 int var6 = var2.getRunStart(var5);
                 var7 = var2.getRunLimit(var5);
                 int var8 = var2.getRunLevel(var5);
                 String var9 = par1Str.substring(var6, var7);
-                var3[var5] = (byte)var8;
+                var3[var5] = (byte) var8;
                 var4[var5] = var9;
             }
 
-            String[] var11 = (String[])var4.clone();
+            String[] var11 = (String[]) var4.clone();
             Bidi.reorderVisually(var3, 0, var4, 0, var3.length);
             StringBuilder var12 = new StringBuilder();
 
-            for(var7 = 0; var7 < var4.length; ++var7) {
+            for (var7 = 0; var7 < var4.length; ++var7) {
                 byte var13 = var3[var7];
 
                 int var14;
-                for(var14 = 0; var14 < var11.length; ++var14) {
+                for (var14 = 0; var14 < var11.length; ++var14) {
                     if (var11[var14].equals(var4[var7])) {
                         var13 = var3[var14];
                         break;
@@ -300,7 +301,7 @@ public class FontFixer {
                 if ((var13 & 1) == 0) {
                     var12.append(var4[var7]);
                 } else {
-                    for(var14 = var4[var7].length() - 1; var14 >= 0; --var14) {
+                    for (var14 = var4[var7].length() - 1; var14 >= 0; --var14) {
                         char var10 = var4[var7].charAt(var14);
                         if (var10 == '(') {
                             var10 = ')';
@@ -328,7 +329,7 @@ public class FontFixer {
     }
 
     private void renderStringAtPos(String string, boolean shadow) {
-        for(int var3 = 0; var3 < string.length(); ++var3) {
+        for (int var3 = 0; var3 < string.length(); ++var3) {
             char var4 = string.charAt(var3);
             int var5;
             int var6;
@@ -350,7 +351,7 @@ public class FontFixer {
 
                     var6 = this.colorCode[var5];
                     this.textColor = var6;
-                    GL11.glColor4f((float)(var6 >> 16) / 255.0F, (float)(var6 >> 8 & 255) / 255.0F, (float)(var6 & 255) / 255.0F, this.alpha);
+                    GL11.glColor4f((float) (var6 >> 16) / 255.0F, (float) (var6 >> 8 & 255) / 255.0F, (float) (var6 & 255) / 255.0F, this.alpha);
                     var3 = applyCustomFormatCodes(this, string, shadow, var3);
                 } else if (var5 == 16) {
                     this.randomStyle = true;
@@ -417,10 +418,10 @@ public class FontFixer {
                     var7 = Tessellator.instance;
                     GL11.glDisable(3553);
                     var7.startDrawingQuads();
-                    var7.addVertex((double)this.posX, (double)(this.posY + (float)(this.FONT_HEIGHT / 2)), 0.0);
-                    var7.addVertex((double)(this.posX + var9), (double)(this.posY + (float)(this.FONT_HEIGHT / 2)), 0.0);
-                    var7.addVertex((double)(this.posX + var9), (double)(this.posY + (float)(this.FONT_HEIGHT / 2) - 1.0F), 0.0);
-                    var7.addVertex((double)this.posX, (double)(this.posY + (float)(this.FONT_HEIGHT / 2) - 1.0F), 0.0);
+                    var7.addVertex((double) this.posX, (double) (this.posY + (float) (this.FONT_HEIGHT / 2)), 0.0);
+                    var7.addVertex((double) (this.posX + var9), (double) (this.posY + (float) (this.FONT_HEIGHT / 2)), 0.0);
+                    var7.addVertex((double) (this.posX + var9), (double) (this.posY + (float) (this.FONT_HEIGHT / 2) - 1.0F), 0.0);
+                    var7.addVertex((double) this.posX, (double) (this.posY + (float) (this.FONT_HEIGHT / 2) - 1.0F), 0.0);
                     var7.draw();
                     GL11.glEnable(3553);
                 }
@@ -430,10 +431,10 @@ public class FontFixer {
                     GL11.glDisable(3553);
                     var7.startDrawingQuads();
                     int var8 = this.underlineStyle ? -1 : 0;
-                    var7.addVertex((double)(this.posX + (float)var8), (double)(this.posY + (float)this.FONT_HEIGHT), 0.0);
-                    var7.addVertex((double)(this.posX + var9), (double)(this.posY + (float)this.FONT_HEIGHT), 0.0);
-                    var7.addVertex((double)(this.posX + var9), (double)(this.posY + (float)this.FONT_HEIGHT - 1.0F), 0.0);
-                    var7.addVertex((double)(this.posX + (float)var8), (double)(this.posY + (float)this.FONT_HEIGHT - 1.0F), 0.0);
+                    var7.addVertex((double) (this.posX + (float) var8), (double) (this.posY + (float) this.FONT_HEIGHT), 0.0);
+                    var7.addVertex((double) (this.posX + var9), (double) (this.posY + (float) this.FONT_HEIGHT), 0.0);
+                    var7.addVertex((double) (this.posX + var9), (double) (this.posY + (float) this.FONT_HEIGHT - 1.0F), 0.0);
+                    var7.addVertex((double) (this.posX + (float) var8), (double) (this.posY + (float) this.FONT_HEIGHT - 1.0F), 0.0);
                     var7.draw();
                     GL11.glEnable(3553);
                 }
@@ -490,15 +491,15 @@ public class FontFixer {
                 par4 = (par4 & 16579836) >> 2 | par4 & -16777216;
             }
 
-            this.red = (float)(par4 >> 16 & 255) / 255.0F;
-            this.blue = (float)(par4 >> 8 & 255) / 255.0F;
-            this.green = (float)(par4 & 255) / 255.0F;
-            this.alpha = (float)(par4 >> 24 & 255) / 255.0F;
+            this.red = (float) (par4 >> 16 & 255) / 255.0F;
+            this.blue = (float) (par4 >> 8 & 255) / 255.0F;
+            this.green = (float) (par4 & 255) / 255.0F;
+            this.alpha = (float) (par4 >> 24 & 255) / 255.0F;
             GL11.glColor4f(this.red, this.blue, this.green, this.alpha);
-            this.posX = (float)par2;
-            this.posY = (float)par3;
+            this.posX = (float) par2;
+            this.posY = (float) par3;
             this.renderStringAtPos(par1Str, par5);
-            return (int)this.posX;
+            return (int) this.posX;
         }
     }
 
@@ -509,7 +510,7 @@ public class FontFixer {
             int var2 = 0;
             boolean var3 = false;
 
-            for(int var4 = 0; var4 < par1Str.length(); ++var4) {
+            for (int var4 = 0; var4 < par1Str.length(); ++var4) {
                 char var5 = par1Str.charAt(var4);
                 int var6 = this.getCharWidth(var5);
                 if (var6 < 0 && var4 < par1Str.length() - 1) {
@@ -543,7 +544,7 @@ public class FontFixer {
             return 4;
         } else {
             int var2 = this.ASCII.indexOf(par1);
-            if (par1 > 0 && var2 != -1 && !((IGameSetting) Minecraft.getMinecraft().gameSettings).isForceUnicodeFont()) {
+            if (par1 > 0 && var2 != -1 && !BGSConfig.FORCE_UNICODE_FONT.getValue()) {
                 return this.charWidth[var2];
             } else if (this.glyphWidth[par1] != 0) {
                 int var3 = this.glyphWidth[par1] >>> 4;
@@ -556,7 +557,7 @@ public class FontFixer {
                 ++var4;
                 return (var4 - var3) / 2 + 1;
             } else {
-                return 0;
+                return 4;
             }
         }
     }
@@ -573,7 +574,7 @@ public class FontFixer {
         boolean var8 = false;
         boolean var9 = false;
 
-        for(int var10 = var6; var10 >= 0 && var10 < par1Str.length() && var5 < par2; var10 += var7) {
+        for (int var10 = var6; var10 >= 0 && var10 < par1Str.length() && var5 < par2; var10 += var7) {
             char var11 = par1Str.charAt(var10);
             int var12 = this.getCharWidth(var11);
             if (var8) {
@@ -609,7 +610,7 @@ public class FontFixer {
     }
 
     private String trimStringNewline(String par1Str) {
-        while(par1Str != null && par1Str.endsWith("\n")) {
+        while (par1Str != null && par1Str.endsWith("\n")) {
             par1Str = par1Str.substring(0, par1Str.length() - 1);
         }
 
@@ -626,8 +627,8 @@ public class FontFixer {
     private void renderSplitString(String par1Str, int par2, int par3, int par4, boolean par5) {
         List var6 = this.listFormattedStringToWidth(par1Str, par4);
 
-        for(Iterator var7 = var6.iterator(); var7.hasNext(); par3 += this.FONT_HEIGHT) {
-            String var8 = (String)var7.next();
+        for (Iterator var7 = var6.iterator(); var7.hasNext(); par3 += this.FONT_HEIGHT) {
+            String var8 = (String) var7.next();
             this.renderStringAligned(var8, par2, par3, par4, this.textColor, par5);
         }
 
@@ -672,7 +673,7 @@ public class FontFixer {
         int var5 = 0;
         int var6 = -1;
 
-        for(boolean var7 = false; var5 < var3; ++var5) {
+        for (boolean var7 = false; var5 < var3; ++var5) {
             char var8 = par1Str.charAt(var5);
             switch (var8) {
                 case '\n':
@@ -727,7 +728,7 @@ public class FontFixer {
         int var2 = -1;
         int var3 = par0Str.length();
 
-        while((var2 = par0Str.indexOf(167, var2 + 1)) != -1) {
+        while ((var2 = par0Str.indexOf(167, var2 + 1)) != -1) {
             if (var2 < var3 - 1) {
                 char var4 = par0Str.charAt(var2 + 1);
                 if (isFormatColor(var4)) {
@@ -743,5 +744,9 @@ public class FontFixer {
 
     public boolean getBidiFlag() {
         return this.bidiFlag;
+    }
+
+    protected InputStream getResourceInputStream(ResourceLocation location) throws IOException {
+        return Minecraft.getMinecraft().getResourceManager().getResource(location).getInputStream();
     }
 }

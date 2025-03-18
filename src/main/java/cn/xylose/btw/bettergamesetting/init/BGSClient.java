@@ -2,7 +2,7 @@ package cn.xylose.btw.bettergamesetting.init;
 
 import btw.AddonHandler;
 import btw.BTWAddon;
-import cn.xylose.btw.bettergamesetting.util.EnumExtends;
+import cn.xylose.btw.bettergamesetting.config.BGSConfigManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -28,5 +28,6 @@ public class BGSClient extends BTWAddon implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         addResourcePackDomain(resourceId);
+        BGSConfigManager.initializeConfig();
     }
 }

@@ -40,7 +40,7 @@ public interface IGameSetting {
         return null;
     }
 
-    default boolean isForceUnicodeFont() {
-        return false;
-    }
+//    default boolean isForceUnicodeFont() {
+//        return false;
+//    }
 }

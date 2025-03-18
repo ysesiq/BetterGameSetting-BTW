@@ -1,5 +1,8 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
+import com.github.skystardust.InputMethodBlocker.NativeUtils;
+import com.github.skystardust.InputMethodBlocker.compat.InputMethodHandler;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,4 +39,17 @@ public class MinecraftMixin {
         return 9999;
     }
 
+    @Inject(method = "displayGuiScreen", at = @At("HEAD"))
+    private void IMBlocker(GuiScreen gui, CallbackInfo ci) {
+        if (InputMethodHandler.getInstance().shouldActive(gui)) {
+            NativeUtils.active("");
+        } else {
+            NativeUtils.inactive("");
+        }
+    }
+
+    @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;displayGuiScreen(Lnet/minecraft/src/GuiScreen;)V", ordinal = 5, shift = At.Shift.AFTER))
+    private void commandingInactive(CallbackInfo ci) {
+        NativeUtils.inactive("");
+    }
 }
