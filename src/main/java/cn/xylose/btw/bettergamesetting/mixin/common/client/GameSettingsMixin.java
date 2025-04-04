@@ -1,8 +1,6 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
 import cn.xylose.btw.bettergamesetting.util.OptionHelper;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
 import net.minecraft.src.*;
@@ -232,24 +230,19 @@ public abstract class GameSettingsMixin implements IGameSetting {
         }
     }
 
-//    @ModifyConstant(method = "saveOptions", constant = @Constant(stringValue = "viewDistance:"))
-//    private String modifyViewDistanceName(String x) {
-//        return "renderDistance:";
-//    }
-//
-//    @ModifyConstant(method = "saveOptions", constant = @Constant(stringValue = "fov:"))
-//    private String modifyFovName(String x) {
-//        return "fovSetting:";
-//    }
-//
-//    @ModifyConstant(method = "saveOptions", constant = @Constant(stringValue = "fpsLimit:"))
-//    private String modifyFpsLimitName(String x) {
-//        return "maxFps:";
-//    }
+    @Redirect(method = "saveOptions", at = @At(value = "INVOKE", target = "Ljava/io/PrintWriter;println(Ljava/lang/String;)V", ordinal = 4))
+    private void disableVanillaFov(PrintWriter instance, String x) {}
+    @Redirect(method = "saveOptions", at = @At(value = "INVOKE", target = "Ljava/io/PrintWriter;println(Ljava/lang/String;)V", ordinal = 6))
+    private void disableVanillaViewDistance(PrintWriter instance, String x) {}
+    @Redirect(method = "saveOptions", at = @At(value = "INVOKE", target = "Ljava/io/PrintWriter;println(Ljava/lang/String;)V", ordinal = 12))
+    private void disableVanillaFpsLimit(PrintWriter instance, String x) {}
 
     @Inject(method = "saveOptions", at = @At(value = "INVOKE", target = "Ljava/io/PrintWriter;println(Ljava/lang/String;)V", ordinal = 40), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void saveExtraOption(CallbackInfo ci, PrintWriter printwriter) {
         printwriter.println("resourcePacks:" + gson.toJson(this.resourcePacks));
+        printwriter.println("fovSetting:" + this.fovSetting);
+        printwriter.println("renderDistance:" + this.renderDistance);
+        printwriter.println("maxFps:" + this.limitFramerate);
 //        printwriter.println("record:" + this.recordVolume);
 //        printwriter.println("weather:" + this.weatherVolume);
 //        printwriter.println("block:" + this.blockVolume);

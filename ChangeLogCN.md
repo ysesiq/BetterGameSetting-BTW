@@ -1,7 +1,9 @@
 # Better Game Setting for BTW
 
-### v1.3.0
+### v1.2.1
 * 加入了输入法冲突修复（ https://github.com/lss233/InputMethodBlocker ）
+* 优化了本模组游戏设置信息的存储，现在不再会覆盖原版的条目
+* 当使用非Nvidia GPU时，强制关闭高级OpenGL
 * 修复了FontFixer无法正常启用的问题
 * 修复了全角左括号“（”不显示的问题
 

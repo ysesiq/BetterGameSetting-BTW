@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
+import cn.xylose.btw.bettergamesetting.util.OpenGlHelperExtra;
 import com.github.skystardust.InputMethodBlocker.NativeUtils;
 import com.github.skystardust.InputMethodBlocker.compat.InputMethodHandler;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -22,6 +23,8 @@ public class MinecraftMixin {
             this.gameSettings.fovSetting = 70;
         if (this.gameSettings.renderDistance < 2 || this.gameSettings.renderDistance > 24)
             this.gameSettings.renderDistance = 12;
+        if (!OpenGlHelperExtra.isNvidiaGL)
+            this.gameSettings.advancedOpengl = false;
     }
 
     /**
