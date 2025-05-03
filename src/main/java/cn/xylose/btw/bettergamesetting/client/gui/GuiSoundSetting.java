@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui;
 
+import cn.xylose.btw.bettergamesetting.client.EnumOptionsExtra;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiCustomSlider;
 import net.minecraft.src.*;
 

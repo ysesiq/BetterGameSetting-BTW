@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException;
 
 import net.minecraft.src.*;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class ResourcePackListEntryDefault extends ResourcePackListEntry {
@@ -11,14 +12,17 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry {
     private final ResourcePack resourcePack;
     private final ResourceLocation resourcePackIcon;
 
-    public ResourcePackListEntryDefault(GuiScreenResourcePacks resourcePacksGUI) {
-        super(resourcePacksGUI);
+    public ResourcePackListEntryDefault(GuiScreenResourcePacks resourcePacksGUIIn) {
+        super(resourcePacksGUIIn);
         this.resourcePack = this.mc.getResourcePackRepository().rprDefaultResourcePack;
         DynamicTexture dynamictexture;
 
         dynamictexture = new DynamicTexture(this.resourcePack.getPackImage());
-
         this.resourcePackIcon = this.mc.getTextureManager().getDynamicTextureLocation("texturepackicon", dynamictexture);
+    }
+
+    protected int getPackFormat() {
+        return 1;
     }
 
     protected String getPackDescription() {
@@ -63,7 +67,4 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry {
     protected boolean func_148310_d() {
         return false;
     }
-
-    @Override
-    public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {}
 }

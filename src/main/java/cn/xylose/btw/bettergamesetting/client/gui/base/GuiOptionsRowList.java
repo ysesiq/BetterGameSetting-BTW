@@ -12,7 +12,7 @@ import net.minecraft.src.Minecraft;
 import java.util.List;
 
 public class GuiOptionsRowList extends GuiListExtended {
-    private final List<GuiOptionsRowList.Row> optionsRowList = Lists.<GuiOptionsRowList.Row>newArrayList();
+    public final List<GuiOptionsRowList.Row> optionsRowList = Lists.<GuiOptionsRowList.Row>newArrayList();
 
     public GuiOptionsRowList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn, EnumOptions... options) {
         super(mcIn, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
@@ -42,7 +42,9 @@ public class GuiOptionsRowList extends GuiListExtended {
             if (max != 1)
                 max--;
 
-            return new GuiScaleSlider(options.returnEnumOrdinal(), x, y, mcIn.gameSettings, 0, max);
+            return new GuiScaleSlider(options.returnEnumOrdinal(), x, y, options, 0, max);
+//        } else if (options == EnumOptionsExtra.FULLSCREEN_RESOLUTION) {
+//            return new GuiResolutionSlider(options.returnEnumOrdinal(), x, y);
         } else {
             int i = options.returnEnumOrdinal();
             return (GuiButton) (options.getEnumFloat() ? new GuiOptionSlider(i, x, y, options) : new GuiOptionButton(i, x, y, options, mcIn.gameSettings.getKeyBinding(options)));
@@ -84,6 +86,30 @@ public class GuiOptionsRowList extends GuiListExtended {
             if (this.buttonRight != null) {
                 this.buttonRight.yPosition = y;
                 this.buttonRight.drawButton(this.minecraft, mouseX, mouseY);
+            }
+
+            if (this.buttonLeft instanceof GuiOptionButton button) {
+                if (button.isMouseOver(mouseX, mouseY)) {
+                    button.drawTooltip(button.returnEnumOptions().getEnumString() + ".desc", mouseX, mouseY);
+                }
+            }
+
+            if (this.buttonRight instanceof GuiOptionButton button) {
+                if (button.isMouseOver(mouseX, mouseY)) {
+                    button.drawTooltip(button.returnEnumOptions().getEnumString() + ".desc", mouseX, mouseY);
+                }
+            }
+
+            if (this.buttonLeft instanceof GuiOptionSlider button) {
+                if (button.isMouseOver(mouseX, mouseY)) {
+                    button.drawTooltip(button.options.getEnumString() + ".desc", mouseX, mouseY);
+                }
+            }
+
+            if (this.buttonRight instanceof GuiOptionSlider button) {
+                if (button.isMouseOver(mouseX, mouseY)) {
+                    button.drawTooltip(button.options.getEnumString() + ".desc", mouseX, mouseY);
+                }
             }
         }
 

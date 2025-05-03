@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui.resourcepack;
 
+import cn.xylose.btw.bettergamesetting.api.IResourcePackRepository;
 import net.minecraft.src.ResourcePackRepositoryEntry;
 
 public class ResourcePackListEntryFound extends ResourcePackListEntry {
@@ -14,6 +15,10 @@ public class ResourcePackListEntryFound extends ResourcePackListEntry {
         this.resourcePackRepositoryEntry.bindTexturePackIcon(this.mc.getTextureManager());
     }
 
+    protected int getPackFormat() {
+        return ((IResourcePackRepository) this.resourcePackRepositoryEntry).getPackFormat();
+    }
+
     protected String getPackDescription() {
         return this.resourcePackRepositoryEntry.getTexturePackDescription();
     }
@@ -24,9 +29,5 @@ public class ResourcePackListEntryFound extends ResourcePackListEntry {
 
     public ResourcePackRepositoryEntry func_148318_i() {
         return this.resourcePackRepositoryEntry;
-    }
-
-    @Override
-    public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
     }
 }

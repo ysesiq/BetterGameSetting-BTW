@@ -1,5 +1,15 @@
 # Better Game Setting for BTW
 
+
+### v1.2.2
+* Annotations have been added for each option of video settings
+* Added check whether the resource package is suitable for the current version
+* Removed the 'Force turn off advanced OpenGL when using a non-Nvidia GPU'
+* Optimized the code
+* May fix an issue where the selected resource pack cannot be clicked in some cases (cannot be reproduced)
+
+---
+
 ### v1.2.1
 * Added input method fix mod( https://github.com/lss233/InputMethodBlocker )
 * Optimized the save of game settings information in this mod, and now no longer overwrites vanilla entries

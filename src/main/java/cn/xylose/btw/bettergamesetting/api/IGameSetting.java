@@ -40,6 +40,10 @@ public interface IGameSetting {
         return null;
     }
 
+    default List<String> getIncompatibleResourcePacks() {
+        return null;
+    }
+
 //    default boolean isForceUnicodeFont() {
 //        return false;
 //    }

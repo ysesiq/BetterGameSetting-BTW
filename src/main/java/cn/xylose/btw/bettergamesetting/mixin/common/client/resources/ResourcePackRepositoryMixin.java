@@ -36,8 +36,8 @@ public class ResourcePackRepositoryMixin implements IResourcePackRepository {
     }
 
     @Override
-    public void func_148527_a(List<ResourcePackRepositoryEntry> p_148527_1_) {
+    public void setRepositories(List<ResourcePackRepositoryEntry> repositories) {
         this.repositoryEntries.clear();
-        this.repositoryEntries.addAll(p_148527_1_);
+        this.repositoryEntries.addAll(repositories);
     }
 }

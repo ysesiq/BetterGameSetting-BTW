@@ -70,7 +70,7 @@ dependencies {
 
 	implementation 'org.apache.commons:commons-lang3:3.13.0'
 
-	implementation files("libs\\Fabric-ASM-v2.3__.jar")
+//	implementation files("libs\\Fabric-ASM-v2.3__.jar")
 	implementation files("libs\\modmenu-10.0.0-dev.jar")
 }
 
@@ -110,9 +110,9 @@ java {
 jar {
 	from sourceSets.main.output.resourcesDir
 	from sourceSets.main.output.classesDirs
-	into('META-INF\\jars') {
-		from("libs\\Fabric-ASM-v2.3.jar")
-	}
+//	into('META-INF\\jars') {
+//		from("libs\\Fabric-ASM-v2.3.jar")
+//	}
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
