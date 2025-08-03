@@ -2,7 +2,6 @@ package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
 import cn.xylose.btw.bettergamesetting.api.IGameSetting;
-import cn.xylose.btw.bettergamesetting.client.gui.GuiYesNoResetKeyBinding;
 import net.minecraft.src.*;
 import org.lwjgl.input.Mouse;
 

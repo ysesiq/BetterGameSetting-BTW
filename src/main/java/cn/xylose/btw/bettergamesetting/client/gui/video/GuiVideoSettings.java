@@ -1,8 +1,6 @@
-package cn.xylose.btw.bettergamesetting.client.gui;
+package cn.xylose.btw.bettergamesetting.client.gui.video;
 
 import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
-import cn.xylose.btw.bettergamesetting.client.gui.base.GuiOptionsRowList;
-import cn.xylose.btw.bettergamesetting.util.OpenGlHelperExtra;
 import net.minecraft.src.*;
 
 public class GuiVideoSettings extends GuiScreen {

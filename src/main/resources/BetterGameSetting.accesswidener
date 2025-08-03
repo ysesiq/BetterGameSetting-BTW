@@ -13,3 +13,4 @@ accessible field net/minecraft/src/Minecraft mcResourcePackRepository Lnet/minec
 accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/SoundSystem;
 accessible field net/minecraft/src/GameSettings renderDistance I
 accessible field net/minecraft/src/GuiChat defaultInputFieldText Ljava/lang/String;
+accessible method net/minecraft/src/GuiMainMenu renderSkybox (IIF)V

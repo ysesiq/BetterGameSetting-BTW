@@ -23,13 +23,12 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Shadow public int renderDistance;
     @Shadow public int limitFramerate;
     @Shadow public float gammaSetting;
-    @Shadow public String skin;
     @Shadow public float fovSetting;
     @Shadow public boolean clouds;
+    @Shadow protected Minecraft mc;
     @Shadow protected abstract float parseFloat(String var1);
     @Shadow public abstract void saveOptions();
     @Shadow public abstract float getOptionFloatValue(EnumOptions par1EnumOptions);
-    @Shadow protected Minecraft mc;
 //    @Unique public float recordVolume = 1.0F;
 //    @Unique public float weatherVolume = 1.0F;
 //    @Unique public float blockVolume = 1.0F;

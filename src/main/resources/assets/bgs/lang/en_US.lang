@@ -46,6 +46,12 @@ option.modmenu.enable_imblocker.false=Off
 option.modmenu.force_unicode_font=Force Unicode Font
 option.modmenu.force_unicode_font.true=On
 option.modmenu.force_unicode_font.false=Off
+option.modmenu.transparent_background=Transparent Background
+option.modmenu.transparent_background.true=On
+option.modmenu.transparent_background.false=Off
+option.modmenu.highlight_button_text=Highlight Button Text
+option.modmenu.highlight_button_text.true=On
+option.modmenu.highlight_button_text.false=Off
 
 # Desc
 options.graphics.desc=Adjust the rendering quality of the game; choose "Fast" for better performance or "Fancy" for improved visuals

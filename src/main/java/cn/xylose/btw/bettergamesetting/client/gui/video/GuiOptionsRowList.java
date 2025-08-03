@@ -1,6 +1,6 @@
-package cn.xylose.btw.bettergamesetting.client.gui.base;
+package cn.xylose.btw.bettergamesetting.client.gui.video;
 
-import cn.xylose.btw.bettergamesetting.api.IGuiSlot;
+import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionButton;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionSlider;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiScaleSlider;
@@ -16,15 +16,14 @@ public class GuiOptionsRowList extends GuiListExtended {
 
     public GuiOptionsRowList(Minecraft mcIn, int widthIn, int heightIn, int topIn, int bottomIn, int slotHeightIn, EnumOptions... options) {
         super(mcIn, widthIn, heightIn, topIn, bottomIn, slotHeightIn);
-//        this.field_148163_i = false;
-        ((IGuiSlot) this).setListWidth(400);
+        this.field_148163_i = false;
 
         for (int i = 0; i < options.length; i += 2) {
-            EnumOptions gamesettings$options = options[i];
-            EnumOptions gamesettings$options1 = i < options.length - 1 ? options[i + 1] : null;
-            GuiButton guibutton = this.getOptionButtons(mcIn, widthIn / 2 - 155, 0, gamesettings$options);
-            GuiButton guibutton1 = this.getOptionButtons(mcIn, widthIn / 2 - 155 + 160, 0, gamesettings$options1);
-            this.optionsRowList.add(new GuiOptionsRowList.Row(guibutton, guibutton1));
+            EnumOptions optionLeft = options[i];
+            EnumOptions optionRight = i < options.length - 1 ? options[i + 1] : null;
+            GuiButton buttonLeft = this.getOptionButtons(mcIn, widthIn / 2 - 155, 0, optionLeft);
+            GuiButton buttonRight = this.getOptionButtons(mcIn, widthIn / 2 - 155 + 160, 0, optionRight);
+            this.optionsRowList.add(new GuiOptionsRowList.Row(buttonLeft, buttonRight));
         }
     }
 
@@ -32,27 +31,26 @@ public class GuiOptionsRowList extends GuiListExtended {
         if (options == null) {
             return null;
         } else if (options == EnumOptions.GUI_SCALE) {
-            int j = 1000;
-            int max = 1;
+            int maxScale = 1000;
+            int userMaxScale = 1;
 
-            while (max < j && mcIn.displayWidth / (max + 1) >= 320 && mcIn.displayHeight / (max + 1) >= 240) {
-                ++max;
+            while (userMaxScale < maxScale && mcIn.displayWidth / userMaxScale >= 320 && mcIn.displayHeight / userMaxScale >= 240) {
+                ++userMaxScale;
             }
 
-            if (max != 1)
-                max--;
+            if (userMaxScale != 1) userMaxScale--;
 
-            return new GuiScaleSlider(options.returnEnumOrdinal(), x, y, options, 0, max);
+            return new GuiScaleSlider(options.returnEnumOrdinal(), x, y, options, 0, userMaxScale);
 //        } else if (options == EnumOptionsExtra.FULLSCREEN_RESOLUTION) {
 //            return new GuiResolutionSlider(options.returnEnumOrdinal(), x, y);
         } else {
             int i = options.returnEnumOrdinal();
-            return (GuiButton) (options.getEnumFloat() ? new GuiOptionSlider(i, x, y, options) : new GuiOptionButton(i, x, y, options, mcIn.gameSettings.getKeyBinding(options)));
+            return options.getEnumFloat() ? new GuiOptionSlider(i, x, y, options) : new GuiOptionButton(i, x, y, options, mcIn.gameSettings.getKeyBinding(options));
         }
     }
 
     public GuiOptionsRowList.Row getListEntry(int index) {
-        return (GuiOptionsRowList.Row) this.optionsRowList.get(index);
+        return this.optionsRowList.get(index);
     }
 
     protected int getSize() {
@@ -134,11 +132,11 @@ public class GuiOptionsRowList extends GuiListExtended {
         }
 
         public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
-            if (this.buttonLeft != null) {
+            if (this.buttonLeft != null && this.buttonLeft instanceof GuiOptionSlider) {
                 this.buttonLeft.mouseReleased(x, y);
             }
 
-            if (this.buttonRight != null) {
+            if (this.buttonRight != null && this.buttonRight instanceof GuiOptionSlider) {
                 this.buttonRight.mouseReleased(x, y);
             }
         }

@@ -1,22 +1,22 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
-import cn.xylose.btw.bettergamesetting.util.OpenGlHelperExtra;
+import cn.xylose.btw.bettergamesetting.util.GuiScreenPanoramaHelp;
 import com.github.skystardust.InputMethodBlocker.NativeUtils;
 import com.github.skystardust.InputMethodBlocker.compat.InputMethodHandler;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = Minecraft.class, priority = 9999)
+@Mixin(value = Minecraft.class, priority = 1200)
 public class MinecraftMixin {
     @Shadow public GameSettings gameSettings;
     @Shadow public GuiScreen currentScreen;
 
     @Inject(method = "runGameLoop", at = @At("HEAD"))
-    private void inject(CallbackInfo ci) {
+    private void optionsLimit(CallbackInfo ci) {
         if (this.gameSettings.limitFramerate < 10 || this.gameSettings.limitFramerate > 260)
             this.gameSettings.limitFramerate = 120;
         if (this.gameSettings.fovSetting < 30 || this.gameSettings.fovSetting > 110)
@@ -32,12 +32,17 @@ public class MinecraftMixin {
     @Overwrite
     private int getLimitFramerate() {
         if (this.currentScreen != null && (this.currentScreen instanceof GuiMainMenu)) {
-            return 24;
+            return 60;
         }
         if (this.gameSettings.limitFramerate <= 260) {
             return this.gameSettings.limitFramerate;
         }
         return 9999;
+    }
+
+    @Redirect(method = "startGame", at = @At(value = "NEW", target = "net/minecraft/src/GuiMainMenu"))
+    private GuiMainMenu unificationPanorama() {
+        return GuiScreenPanoramaHelp.panoramaDummy;
     }
 
     @Inject(method = "displayGuiScreen", at = @At("HEAD"))

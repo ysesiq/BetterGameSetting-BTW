@@ -40,12 +40,8 @@
     ]
   },
   "mixins": [
-    "BetterGameSetting.mixins.json"
-  ],
-  "jars": [
-    {
-      "file": "META-INF/jars/Fabric-ASM-v2.3.jar"
-    }
+    "BetterGameSetting.mixins.json",
+    "BetterGameSetting.compat.mixins.json"
   ],
   "accessWidener": "BetterGameSetting.accesswidener",
   "custom": {

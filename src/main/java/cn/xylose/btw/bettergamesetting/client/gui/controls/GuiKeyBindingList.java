@@ -1,29 +1,26 @@
 package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
-import cn.xylose.btw.bettergamesetting.api.IGuiSlot;
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
 import cn.xylose.btw.bettergamesetting.client.KeyBindingExtra;
 import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import net.minecraft.src.*;
 import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Arrays;
 
 public class GuiKeyBindingList extends GuiListExtended {
-    private final GuiNewControls field_148191_k;
+    private final GuiNewControls guiControls;
     private final Minecraft mc;
     public final IGuiListEntry[] listEntries;
     private int maxListLabelWidth = 0;
 
     public GuiKeyBindingList(GuiNewControls controls, Minecraft mcIn) {
         super(mcIn, controls.width, controls.height, 63, controls.height - 32, 20);
-        ((IGuiSlot) this).setListWidth(((IGuiSlot) this).getListWidth() + 32);
-        this.field_148191_k = controls;
+        this.guiControls = controls;
         this.mc = mcIn;
         KeyBinding[] akeybinding = (KeyBinding[]) ArrayUtils.clone(mcIn.gameSettings.keyBindings);
-        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBinding.keybindArray.size() / 1.5)];
+        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBinding.keybindArray.size() / 2.2)];
         try {
             Arrays.sort((KeyBindingExtra[]) akeybinding);
         } catch (Exception ignored) {
@@ -66,9 +63,10 @@ public class GuiKeyBindingList extends GuiListExtended {
         return super.getScrollBarX() + 15;
     }
 
-    //    public int getListWidth() {
-//        return super.getListWidth() + 32;
-//    }
+    public int getListWidth() {
+        return super.getListWidth() + 32;
+    }
+
     public class CategoryEntry implements IGuiListEntry {
         private final String labelText;
         private final int labelWidth;
@@ -107,7 +105,7 @@ public class GuiKeyBindingList extends GuiListExtended {
         }
 
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
-            boolean flag = GuiKeyBindingList.this.field_148191_k.buttonId == this.keybinding;
+            boolean flag = GuiKeyBindingList.this.guiControls.buttonId == this.keybinding;
             GuiKeyBindingList.this.mc.fontRenderer.drawString(this.keyDesc, x + 90 - GuiKeyBindingList.this.maxListLabelWidth, y + slotHeight / 2 - GuiKeyBindingList.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
             this.btnReset.xPosition = x + 190;
             this.btnReset.yPosition = y;
@@ -138,7 +136,7 @@ public class GuiKeyBindingList extends GuiListExtended {
 
         public boolean mousePressed(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
             if (this.btnChangeKeyBinding.mousePressed(GuiKeyBindingList.this.mc, x, y)) {
-                GuiKeyBindingList.this.field_148191_k.buttonId = this.keybinding;
+                GuiKeyBindingList.this.guiControls.buttonId = this.keybinding;
                 return true;
             } else if (this.btnReset.mousePressed(GuiKeyBindingList.this.mc, x, y)) {
                 ((IGameSetting) GuiKeyBindingList.this.mc.gameSettings).setOptionKeyBinding(this.keybinding, ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription, keybinding.keyCode));

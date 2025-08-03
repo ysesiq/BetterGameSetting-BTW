@@ -153,8 +153,8 @@ public abstract class ResourcePackListEntry extends GuiScreen implements GuiList
 ////                        }
 ////                    }, s1, s, 0));
 //                } else {
-                    this.resourcePacksGUI.getListContaining(this).remove(this);
-                    this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
+                this.resourcePacksGUI.getListContaining(this).remove(this);
+                this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
 //                }
 
                 return true;

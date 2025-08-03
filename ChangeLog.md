@@ -1,5 +1,16 @@
 # Better Game Setting for BTW
 
+### v1.2.3
+* Added `Transparent Background` option
+* Added `Highlight Button Text` option
+* Reimplemented a more modern `GuiSlot`
+* Optimized the code
+* Fixed the issue where elements outside the list in the resource pack interface were still displayed
+* Fixed the issue where the maximum interface size was still smaller than the automatic setting
+* Fixed the issue where the shadow of English & Numbers was too far off
+* Fixed the issue where the disabled button area in the resource pack was incorrect
+
+---
 
 ### v1.2.2
 * Annotations have been added for each option of video settings

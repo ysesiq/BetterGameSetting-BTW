@@ -1,18 +1,15 @@
 package cn.xylose.btw.bettergamesetting.client.gui.resourcepack;
 
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionButton;
+import cn.xylose.btw.bettergamesetting.config.BGSConfig;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import cn.xylose.btw.bettergamesetting.api.IGameSetting;
-import cn.xylose.btw.bettergamesetting.api.IGuiSlot;
 import cn.xylose.btw.bettergamesetting.api.IResourcePackRepository;
 import net.minecraft.src.*;
 import org.lwjgl.Sys;
@@ -57,12 +54,11 @@ public class GuiScreenResourcePacks extends GuiScreen {
             this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
         }
 
-        this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
         this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, this.availableResourcePacks);
-        ((IGuiSlot) this.availableResourcePacksList).setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
+        this.availableResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.availableResourcePacksList.registerScrollButtons(7, 8);
         this.selectedResourcePacksList = new GuiResourcePackSelected(this.mc, 200, this.height, this.selectedResourcePacks);
-        ((IGuiSlot) this.selectedResourcePacksList).setSlotXBoundsFromLeft(this.width / 2 + 4);
+        this.selectedResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 + 4);
         this.selectedResourcePacksList.registerScrollButtons(7, 8);
     }
 
@@ -179,7 +175,8 @@ public class GuiScreenResourcePacks extends GuiScreen {
      * Draws the screen and all the components in it.
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawBackground(0);
+        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) this.drawDefaultBackground();
+        else this.drawBackground(0);
         this.availableResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.drawCenteredString(this.fontRenderer, I18n.getString("resourcePack.title"), this.width / 2, 16, 16777215);

@@ -1,4 +1,4 @@
-package cn.xylose.btw.bettergamesetting.client.gui;
+package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
 import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
