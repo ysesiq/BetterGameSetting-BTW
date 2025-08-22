@@ -1,5 +1,10 @@
 # Better Game Setting for BTW
 
+### v1.2.3-fix
+* Fixed the issue where the open control gui crashed
+
+---
+
 ### v1.2.3
 * Added `Transparent Background` option
 * Added `Highlight Button Text` option

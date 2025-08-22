@@ -20,7 +20,7 @@ public class GuiKeyBindingList extends GuiListExtended {
         this.guiControls = controls;
         this.mc = mcIn;
         KeyBinding[] akeybinding = (KeyBinding[]) ArrayUtils.clone(mcIn.gameSettings.keyBindings);
-        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBinding.keybindArray.size() / 2.2)];
+        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBinding.keybindArray.size() / 2)];
         try {
             Arrays.sort((KeyBindingExtra[]) akeybinding);
         } catch (Exception ignored) {
