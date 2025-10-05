@@ -26,8 +26,7 @@ key.categories.gameplay=游戏内容
 key.categories.ui=游戏界面
 key.categories.inventory=道具栏
 key.categories.uncategorized=未分类
-controls.reset_keybinding_info_0=确定要重置所有按键吗?
-controls.reset_keybinding_info_1=§4警告:当前对模组按键的重置并未兼容!
+controls.reset_keybinding_info=确定要重置所有按键吗?
 
 resourcePack.available.title=可用的资源包
 resourcePack.selected.title=已选的资源包

@@ -53,7 +53,7 @@ public class GuiNewControls extends GuiScreen {
         } else if (button.id == 201) {
             this.mc.displayGuiScreen(new GuiYesNoResetKeyBinding(this));
         } else if (button.id == 202) {
-            this.mc.displayGuiScreen(new GuiControls(this.parentScreen, this.options));
+            this.mc.displayGuiScreen(new GuiControls(this, this.options));
             this.options.saveOptions();
         } else if (button.id < 100 && button instanceof GuiSmallButton) {
             this.options.setOptionValue(((GuiSmallButton) button).returnEnumOptions(), 1);
@@ -103,7 +103,7 @@ public class GuiNewControls extends GuiScreen {
         boolean flag = true;
 
         for (KeyBinding keybinding : this.options.keyBindings) {
-            if (keybinding.keyCode != ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription, keybinding.keyCode)) {
+            if (keybinding.keyCode != keybinding.getDefaultKeyCode(keybinding.keyDescription)) {
                 flag = false;
                 break;
             }

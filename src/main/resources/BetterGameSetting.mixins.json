@@ -23,7 +23,7 @@
     "client.renderer.RenderGlobalMixin",
     "client.renderer.RenderMixin",
     "client.resources.ResourcePackRepositoryEntryMixin",
-    "client.resources.ResourcePackRepositoryMixin",
+    "client.resources.ResourcePackRepositoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

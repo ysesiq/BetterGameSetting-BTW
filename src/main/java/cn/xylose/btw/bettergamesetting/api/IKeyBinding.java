@@ -3,7 +3,7 @@ package cn.xylose.btw.bettergamesetting.api;
 import net.minecraft.src.KeyBinding;
 
 public interface IKeyBinding {
-    default String getKeyCategory() {
+    default String getKeyCategory(String keyDescription) {
         return "";
     }
 
@@ -19,7 +19,7 @@ public interface IKeyBinding {
         return;
     }
 
-    default int getDefaultKeyCode(String keyDescription, int keyCode) {
+    default int getDefaultKeyCode(String keyDescription) {
         return 0;
     }
 }

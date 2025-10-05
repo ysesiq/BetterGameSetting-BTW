@@ -47,7 +47,8 @@
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/src/EnumOptions": ["cn/xylose/btw/bettergamesetting/api/IEnumOptions"],
-      "net/minecraft/src/GameSettings": ["cn/xylose/btw/bettergamesetting/api/IGameSetting"]
+      "net/minecraft/src/GameSettings": ["cn/xylose/btw/bettergamesetting/api/IGameSetting"],
+      "net/minecraft/src/KeyBinding": ["cn/xylose/btw/bettergamesetting/api/IKeyBinding", "java/lang/Comparable"]
     },
     "modmenu:clientsideOnly": true
   }

@@ -1,8 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
-import cn.xylose.btw.bettergamesetting.client.KeyBindingExtra;
-import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import net.minecraft.src.*;
 import org.apache.commons.lang3.ArrayUtils;
@@ -19,18 +17,15 @@ public class GuiKeyBindingList extends GuiListExtended {
         super(mcIn, controls.width, controls.height, 63, controls.height - 32, 20);
         this.guiControls = controls;
         this.mc = mcIn;
-        KeyBinding[] akeybinding = (KeyBinding[]) ArrayUtils.clone(mcIn.gameSettings.keyBindings);
-        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBinding.keybindArray.size() / 2)];
-        try {
-            Arrays.sort((KeyBindingExtra[]) akeybinding);
-        } catch (Exception ignored) {
-        }
+        KeyBinding[] akeybinding = ArrayUtils.clone(mcIn.gameSettings.keyBindings);
+        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + 10)];//10 represents 10 key Categories
+//      Arrays.sort(akeybinding);
+
         int i = 0;
         String s = null;
 
         for (KeyBinding keybinding : akeybinding) {
-            String s1 = KeyBindingExtra.getKeyCategory(keybinding.keyDescription);
-//            String s1 = keybinding.keyDescription;
+            String s1 = keybinding.getKeyCategory(keybinding.keyDescription);
 
             if (!s1.equals(s)) {
                 s = s1;
@@ -47,7 +42,7 @@ public class GuiKeyBindingList extends GuiListExtended {
         }
     }
 
-    public int getSize() {
+    protected int getSize() {
         return this.listEntries.length;
     }
 
@@ -109,7 +104,7 @@ public class GuiKeyBindingList extends GuiListExtended {
             GuiKeyBindingList.this.mc.fontRenderer.drawString(this.keyDesc, x + 90 - GuiKeyBindingList.this.maxListLabelWidth, y + slotHeight / 2 - GuiKeyBindingList.this.mc.fontRenderer.FONT_HEIGHT / 2, 16777215);
             this.btnReset.xPosition = x + 190;
             this.btnReset.yPosition = y;
-            this.btnReset.enabled = this.keybinding.keyCode != ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription, keybinding.keyCode);
+            this.btnReset.enabled = this.keybinding.keyCode != ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription);
             this.btnReset.drawButton(GuiKeyBindingList.this.mc, mouseX, mouseY);
             this.btnChangeKeyBinding.xPosition = x + 105;
             this.btnChangeKeyBinding.yPosition = y;
@@ -139,7 +134,7 @@ public class GuiKeyBindingList extends GuiListExtended {
                 GuiKeyBindingList.this.guiControls.buttonId = this.keybinding;
                 return true;
             } else if (this.btnReset.mousePressed(GuiKeyBindingList.this.mc, x, y)) {
-                ((IGameSetting) GuiKeyBindingList.this.mc.gameSettings).setOptionKeyBinding(this.keybinding, ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription, keybinding.keyCode));
+                GuiKeyBindingList.this.mc.gameSettings.setOptionKeyBinding(this.keybinding, ((IKeyBinding) keybinding).getDefaultKeyCode(keybinding.keyDescription));
                 KeyBinding.resetKeyBindingArrayAndHash();
                 return true;
             } else {
