@@ -1,10 +1,12 @@
 package cn.xylose.btw.bettergamesetting.init;
 
-import btw.AddonHandler;
-import btw.BTWAddon;
+import api.AddonHandler;
+import api.BTWAddon;
 import cn.xylose.btw.bettergamesetting.config.BGSConfigManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+
+import java.io.IOException;
 
 public class BGSClient extends BTWAddon implements ClientModInitializer {
     public static String resourceId = "bgs";

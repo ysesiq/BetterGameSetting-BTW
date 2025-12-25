@@ -1,6 +1,5 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client.resources;
 
-import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.api.IResourcePackRepository;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(ResourcePackRepository.class)
@@ -18,15 +16,10 @@ public class ResourcePackRepositoryMixin implements IResourcePackRepository {
     @Shadow private List repositoryEntries;
     @Shadow private List repositoryEntriesAll;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(method = "<init>*", at = @At("TAIL"))
     private void loadResourcePacks(File resourcePack, ResourcePack metadataSerializer, MetadataSerializer gameSettings, GameSettings par4, CallbackInfo ci) {
-        Iterator iterator = ((IGameSetting) par4).getResourcePacks().iterator();
-
-        while (iterator.hasNext()) {
-            String s = (String) iterator.next();
-            Iterator iterator1 = this.repositoryEntriesAll.iterator();
-            while (iterator1.hasNext()) {
-                ResourcePackRepositoryEntry entry = (ResourcePackRepositoryEntry) iterator1.next();
+        for (String s : par4.getResourcePacks()) {
+            for (ResourcePackRepositoryEntry entry : (List<ResourcePackRepositoryEntry>) this.repositoryEntriesAll) {
                 if (entry.getResourcePackName().equals(s)) {
                     this.repositoryEntries.add(entry);
                     break;

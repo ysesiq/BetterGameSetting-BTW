@@ -1,7 +1,9 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
 import cn.xylose.btw.bettergamesetting.api.IEnumOptions;
+import cn.xylose.btw.bettergamesetting.client.EnumOptionsExtra;
 import cn.xylose.btw.bettergamesetting.util.EnumHelper;
+import com.chocohead.mm.api.ClassTinkerers;
 import net.minecraft.src.EnumOptions;
 import net.minecraft.src.MathHelper;
 import org.spongepowered.asm.mixin.*;
@@ -44,6 +46,19 @@ public abstract class EnumOptionsMixin implements IEnumOptions {
 //        EnumOptionsExtra.ANISOTROPIC_FILTERING.setValueMin(1.0F);
 //        EnumOptionsExtra.ANISOTROPIC_FILTERING.setValueMax(16.0F);
 //        EnumOptionsExtra.ANISOTROPIC_FILTERING.setValueStep(1.0F);
+        EnumOptionsExtra.RECORDS = ClassTinkerers.getEnum(EnumOptions.class, "RECORDS");
+        EnumOptionsExtra.WEATHER = ClassTinkerers.getEnum(EnumOptions.class, "WEATHER");
+        EnumOptionsExtra.BLOCKS = ClassTinkerers.getEnum(EnumOptions.class, "BLOCKS");
+        EnumOptionsExtra.MOBS = ClassTinkerers.getEnum(EnumOptions.class, "MOBS");
+        EnumOptionsExtra.ANIMALS = ClassTinkerers.getEnum(EnumOptions.class, "ANIMALS");
+        EnumOptionsExtra.PLAYERS = ClassTinkerers.getEnum(EnumOptions.class, "PLAYERS");
+        EnumOptionsExtra.AMBIENT = ClassTinkerers.getEnum(EnumOptions.class, "AMBIENT");
+        EnumOptionsExtra.UI = ClassTinkerers.getEnum(EnumOptions.class, "UI");
+        EnumOptionsExtra.FORCE_UNICODE_FONT = ClassTinkerers.getEnum(EnumOptions.class, "FORCE_UNICODE_FONT");
+        //    EnumOptionsExtra.FULLSCREEN_RESOLUTION = ClassTinkerers.getEnum(EnumOptions.class, "FULLSCREEN_RESOLUTION");
+        EnumOptionsExtra.TRANSPARENT_BACKGROUND = ClassTinkerers.getEnum(EnumOptions.class, "TRANSPARENT_BACKGROUND");
+        EnumOptionsExtra.HIGHLIGHT_BUTTON_TEXT = ClassTinkerers.getEnum(EnumOptions.class, "HIGHLIGHT_BUTTON_TEXT");
+
     }
 
 

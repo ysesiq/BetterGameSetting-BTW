@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.mixin.common.client;
 
+import cn.xylose.btw.bettergamesetting.client.EnumOptionsExtra;
 import cn.xylose.btw.bettergamesetting.util.OptionHelper;
 import cn.xylose.btw.bettergamesetting.api.IGameSetting;
 import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
@@ -29,6 +30,8 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Shadow protected abstract float parseFloat(String var1);
     @Shadow public abstract void saveOptions();
     @Shadow public abstract float getOptionFloatValue(EnumOptions par1EnumOptions);
+
+    @Unique public boolean forceUnicodeFont;
 //    @Unique public float recordVolume = 1.0F;
 //    @Unique public float weatherVolume = 1.0F;
 //    @Unique public float blockVolume = 1.0F;
@@ -40,14 +43,14 @@ public abstract class GameSettingsMixin implements IGameSetting {
     @Unique public List<String> incompatibleResourcePacks = Lists.<String>newArrayList();
 
 
-//    @Inject(method = "<init>(Lnet/minecraft/src/Minecraft;Ljava/io/File;)V", at = @At("RETURN"))
-//    private void newDefaultValue(Minecraft par1Minecraft, File par2File, CallbackInfo ci) {
-//        this.renderDistance = 8;
-//        this.limitFramerate = 120;
-//        this.gammaSetting = 0.5F;
-//        this.fovSetting = 70.0F;
-//        this.forceUnicodeFont = false;
-//    }
+    @Inject(method = "<init>(Lnet/minecraft/src/Minecraft;Ljava/io/File;)V", at = @At("RETURN"))
+    private void newDefaultValue(Minecraft par1Minecraft, File par2File, CallbackInfo ci) {
+        this.renderDistance = 8;
+        this.limitFramerate = 120;
+        this.gammaSetting = 0.5F;
+        this.fovSetting = 70.0F;
+        this.forceUnicodeFont = false;
+    }
 
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void newDefaultValue_1(CallbackInfo ci) {
@@ -57,13 +60,13 @@ public abstract class GameSettingsMixin implements IGameSetting {
         this.fovSetting = 70.0F;
     }
 
-//    @Inject(method = "setOptionValue", at = @At("TAIL"))
-//    public void setOptionValue(EnumOptions par1EnumOptions, int par2, CallbackInfo ci) {
-//        if (par1EnumOptions == EnumOptionsExtra.FORCE_UNICODE_FONT) {
-//            this.forceUnicodeFont = !this.forceUnicodeFont;
-//            this.mc.fontRenderer.setUnicodeFlag(this.mc.getLanguageManager().isCurrentLocaleUnicode() || this.forceUnicodeFont);
-//        }
-//    }
+    @Inject(method = "setOptionValue", at = @At("TAIL"))
+    public void setOptionValue(EnumOptions par1EnumOptions, int par2, CallbackInfo ci) {
+        if (par1EnumOptions == EnumOptionsExtra.FORCE_UNICODE_FONT) {
+            this.forceUnicodeFont = !this.forceUnicodeFont;
+            this.mc.fontRenderer.setUnicodeFlag(this.mc.getLanguageManager().isCurrentLocaleUnicode() || this.forceUnicodeFont);
+        }
+    }
 
     @Inject(method = "setOptionFloatValue", at = @At("TAIL"))
     public void setOptionFloatValue(EnumOptions par1EnumOptions, float par2, CallbackInfo ci) {
@@ -156,8 +159,14 @@ public abstract class GameSettingsMixin implements IGameSetting {
                 cir.setReturnValue(var2 + (int) this.fovSetting);
             }
         }
-//        if (par1EnumOptions == EnumOptionsExtra.FORCE_UNICODE_FONT) {
-//            cir.setReturnValue(var2 + getTranslationBoolean(this.forceUnicodeFont));
+        if (par1EnumOptions == EnumOptionsExtra.FORCE_UNICODE_FONT) {
+            cir.setReturnValue(var2 + getTranslationBoolean(this.forceUnicodeFont));
+        }
+//        if (par1EnumOptions == EnumOptionsExtra.TRANSPARENT_BACKGROUND) {
+//            cir.setReturnValue(var2 + getTranslationBoolean(this.transparentBackground));
+//        }
+//        if (par1EnumOptions == EnumOptionsExtra.HIGHLIGHT_BUTTON_TEXT) {
+//            cir.setReturnValue(var2 + getTranslationBoolean(this.highlightButtonText));
 //        }
     }
 
@@ -209,9 +218,9 @@ public abstract class GameSettingsMixin implements IGameSetting {
                         this.incompatibleResourcePacks = Lists.<String>newArrayList();
                     }
                 }
-//                if (astring[0].equals("forceUnicodeFont")) {
-//                    this.forceUnicodeFont = astring[1].equals("true");
-//                }
+                if (astring[0].equals("forceUnicodeFont")) {
+                    this.forceUnicodeFont = astring[1].equals("true");
+                }
 //                if (astring[0].equals("record")) {
 //                    this.recordVolume = this.parseFloat(astring[1]);
 //                }
