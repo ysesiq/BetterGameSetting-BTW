@@ -27,6 +27,8 @@ public abstract class GuiListExtended extends GuiSlotModern {
         this.getListEntry(p_178040_1_).setSelected(p_178040_1_, p_178040_2_, p_178040_3_);
     }
 
+    protected abstract void drawTooltip(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY);
+
     public boolean mouseClicked(int mouseXIn, int mouseYIn, int mouseEvent) {
         if (this.isMouseYWithinSlotBounds(mouseYIn)) {
             int i = this.getSlotIndexFromScreenCoords(mouseXIn, mouseYIn);
@@ -63,16 +65,24 @@ public abstract class GuiListExtended extends GuiSlotModern {
         return false;
     }
 
+    public void keyTyped(char typedChar, int keyCode) {
+        for (int i = 0; i < this.getSize(); ++i) {
+            this.getListEntry(i).keyTyped(i, typedChar, keyCode);
+        }
+    }
+
     public abstract GuiListExtended.IGuiListEntry getListEntry(int index);
 
     public interface IGuiListEntry {
-        void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_);
+        void setSelected(int slotIndex, int mouseX, int mouseY);
 
         void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected);
 
         boolean mousePressed(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY);
 
         void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY);
+
+        void keyTyped(int slotIndex, char typedChar, int keyCode);
     }
 }
 

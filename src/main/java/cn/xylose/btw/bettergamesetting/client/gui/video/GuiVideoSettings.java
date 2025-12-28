@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui.video;
 
+import cn.xylose.btw.bettergamesetting.client.EnumOptionsExtra;
 import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import net.minecraft.src.*;
 
@@ -11,7 +12,24 @@ public class GuiVideoSettings extends GuiScreen {
     /**
      * An array of all of EnumOptions's video options.
      */
-    private static final EnumOptions[] videoOptions = new EnumOptions[]{EnumOptions.GRAPHICS, EnumOptions.RENDER_DISTANCE, EnumOptions.AMBIENT_OCCLUSION, EnumOptions.FRAMERATE_LIMIT, EnumOptions.ANAGLYPH, EnumOptions.VIEW_BOBBING, EnumOptions.GUI_SCALE, EnumOptions.ADVANCED_OPENGL, EnumOptions.GAMMA, EnumOptions.RENDER_CLOUDS, EnumOptions.PARTICLES, EnumOptions.USE_FULLSCREEN, EnumOptions.ENABLE_VSYNC
+    private static final EnumOptions[] videoOptions = new EnumOptions[]{
+            EnumOptions.GRAPHICS,
+            EnumOptions.RENDER_DISTANCE,
+            EnumOptions.AMBIENT_OCCLUSION,
+            EnumOptions.FRAMERATE_LIMIT,
+            EnumOptions.ANAGLYPH,
+            EnumOptions.VIEW_BOBBING,
+            EnumOptions.GUI_SCALE,
+            EnumOptions.ADVANCED_OPENGL,
+            EnumOptions.GAMMA,
+            EnumOptions.RENDER_CLOUDS,
+            EnumOptions.PARTICLES,
+            EnumOptions.USE_SERVER_TEXTURES,
+            EnumOptions.USE_FULLSCREEN,
+            EnumOptions.BORDERLESS_FULLSCREEN,
+            EnumOptions.ENABLE_VSYNC,
+            EnumOptionsExtra.TRANSPARENT_BACKGROUND,
+            EnumOptionsExtra.HIGHLIGHT_BUTTON_TEXT
 //            ,EnumOptions.MIPMAP_LEVELS, EnumOptions.ANISOTROPIC_FILTERING
     };
 

@@ -1,7 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
-import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
-import cn.xylose.btw.bettergamesetting.api.IGameSetting;
+import cn.xylose.btw.bettergamesetting.client.gui.base.GuiYesNoModern;
 import net.minecraft.src.*;
 import org.lwjgl.input.Mouse;
 
@@ -10,7 +9,7 @@ public class GuiNewControls extends GuiScreen {
     private GuiScreen parentScreen;
     protected String screenTitle = "Controls";
     private GameSettings options;
-    public KeyBinding buttonId = null;
+    public KeyBinding binding = null;
     public long time;
     private GuiKeyBindingList keyBindingList;
     private GuiButton buttonReset;
@@ -23,35 +22,37 @@ public class GuiNewControls extends GuiScreen {
 
     public void initGui() {
         this.keyBindingList = new GuiKeyBindingList(this, this.mc);
-        this.buttonList.add(new GuiButton(200, this.width / 2 - 155, this.height - 29, 150, 20, I18n.getString("gui.done")));
-        this.buttonList.add(this.buttonReset = new GuiButton(201, this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.getString("controls.resetAll")));
-        this.buttonList.add(new GuiButton(202, this.width / 2 - 155 + 160, 18 + 24, 150, 20, I18n.getString("controls.classicControls")));
+        this.buttonList.add(new GuiButton(200, this.width / 2 + 5, this.height - 29, 150, 20, I18n.getString("gui.done")));
+        this.buttonList.add(this.buttonReset = new GuiButton(201, this.width / 2 - 155, this.height - 29, 150, 20, I18n.getString("controls.resetAll")));
+        this.buttonList.add(new GuiButton(202, this.width / 2 + 5, 18 + 22, 150, 20, I18n.getString("controls.classicControls")));
         this.screenTitle = I18n.getString("controls.title");
         int i = 0;
 
-        for (EnumOptions gamesettings$options : optionsArr) {
-            if (gamesettings$options.getEnumFloat()) {
-                guiSlider = new GuiSlider(gamesettings$options.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, 18 + 24 * (i >> 1), gamesettings$options, this.options.getKeyBinding(gamesettings$options), this.options.getOptionFloatValue(gamesettings$options));
+        for (EnumOptions options : optionsArr) {
+            if (options.getEnumFloat()) {
+                guiSlider = new GuiSlider(options.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, 18 + 22 * (i >> 1), options, this.options.getKeyBinding(options), this.options.getOptionFloatValue(options));
                 this.buttonList.add(guiSlider);
             } else {
-                this.buttonList.add(new GuiSmallButton(gamesettings$options.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, 18 + 24 * (i >> 1), gamesettings$options, this.options.getKeyBinding(gamesettings$options)));
+                this.buttonList.add(new GuiSmallButton(options.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, 18 + 22 * (i >> 1), options, this.options.getKeyBinding(options)));
             }
 
             ++i;
         }
     }
 
-    public void handleMouseInput() {
-        super.handleMouseInput();
-//        this.keyBindingList.handleMouseInput();
-//        Mouse.getEventButton();
-    }
-
     protected void actionPerformed(GuiButton button) {
         if (button.id == 200) {
             this.mc.displayGuiScreen(this.parentScreen);
         } else if (button.id == 201) {
-            this.mc.displayGuiScreen(new GuiYesNoResetKeyBinding(this));
+            this.mc.displayGuiScreen(new GuiYesNoModern((result, id) -> {
+                this.mc.displayGuiScreen(this);
+                if (result) {
+                    for (KeyBinding keybinding : this.mc.gameSettings.keyBindings) {
+                        this.mc.gameSettings.setOptionKeyBinding(keybinding, keybinding.getDefaultKeyCode(keybinding.keyDescription));
+                    }
+                    KeyBinding.resetKeyBindingArrayAndHash();
+                }
+            }, I18n.getString("controls.reset_keybinding_info"), 0));
         } else if (button.id == 202) {
             this.mc.displayGuiScreen(new GuiControls(this, this.options));
             this.options.saveOptions();
@@ -63,9 +64,9 @@ public class GuiNewControls extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (this.buttonId != null) {
-            ((IGameSetting) this.options).setOptionKeyBinding(this.buttonId, -100 + Mouse.getEventButton());
-            this.buttonId = null;
+        if (this.binding != null) {
+            this.options.setOptionKeyBinding(this.binding, -100 + Mouse.getEventButton());
+            this.binding = null;
             KeyBinding.resetKeyBindingArrayAndHash();
         } else if (mouseButton != 0 || !this.keyBindingList.mouseClicked(mouseX, mouseY, mouseButton)) {
             super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -79,16 +80,16 @@ public class GuiNewControls extends GuiScreen {
 //    }
 
     protected void keyTyped(char typedChar, int keyCode) {
-        if (this.buttonId != null) {
+        if (this.binding != null) {
             if (keyCode == 1) {
-                ((IGameSetting) this.options).setOptionKeyBinding(this.buttonId, 0);
+                this.options.setOptionKeyBinding(this.binding, 0);
             } else if (keyCode != 0) {
-                ((IGameSetting) this.options).setOptionKeyBinding(this.buttonId, keyCode);
+                this.options.setOptionKeyBinding(this.binding, keyCode);
             } else if (typedChar > 0) {
-                ((IGameSetting) this.options).setOptionKeyBinding(this.buttonId, typedChar + 256);
+                this.options.setOptionKeyBinding(this.binding, typedChar + 256);
             }
 
-            this.buttonId = null;
+            this.binding = null;
             this.time = Minecraft.getSystemTime();
             KeyBinding.resetKeyBindingArrayAndHash();
         } else {

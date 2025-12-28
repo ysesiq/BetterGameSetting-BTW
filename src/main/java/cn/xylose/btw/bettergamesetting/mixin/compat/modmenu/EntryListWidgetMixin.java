@@ -1,6 +1,5 @@
 package cn.xylose.btw.bettergamesetting.mixin.compat.modmenu;
 
-import cn.xylose.btw.bettergamesetting.config.BGSConfig;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.terraformersmc.modmenu.gui.widget.entries.EntryListWidget;
@@ -31,50 +30,50 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private void transparentBackground(TextureManager instance, ResourceLocation resourceLocation) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.bindTexture(resourceLocation);
+        if (!this.client.gameSettings.isTransparentBackground()) instance.bindTexture(resourceLocation);
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;start()V", ordinal = 0, remap = false))
     private void transparentBackgroundStart(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.start();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.start();
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", ordinal = 0, remap = false))
     private int transparentBackgroundEnd(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.end();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.end();
         return 0;
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;start()V", ordinal = 1, remap = false))
     private void delGradientMatteStart_1(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.start();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.start();
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", ordinal = 1, remap = false))
     private int delGradientMatteEnd_1(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.end();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.end();
         return 0;
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;start()V", ordinal = 2, remap = false))
     private void delGradientMatteStart_2(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.start();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.start();
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", ordinal = 2, remap = false))
     private int delGradientMatteEnd_2(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.end();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.end();
         return 0;
     }
 
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/terraformersmc/modmenu/gui/widget/entries/EntryListWidget;renderList(IIII)V"))
     private void delRenderList(EntryListWidget instance, int x, int y, int mouseX, int mouseY) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) this.renderList(x, y, mouseX, mouseY);
+        if (!this.client.gameSettings.isTransparentBackground()) this.renderList(x, y, mouseX, mouseY);
     }
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/terraformersmc/modmenu/gui/widget/entries/EntryListWidget;renderHoleBackground(IIII)V", ordinal = 1, shift = At.Shift.AFTER))
     private void addRenderList(int mouseX, int mouseY, float tickDelta, CallbackInfo ci, @Local(name = "n4") int n4, @Local(name = "n5") int n5) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (this.client.gameSettings.isTransparentBackground()) {
             ScaledResolution sr = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);
             GL11.glScissor(this.left * sr.getScaleFactor(), client.displayHeight - this.bottom * sr.getScaleFactor(), (this.right - this.left) * sr.getScaleFactor(), (this.bottom - this.top) * sr.getScaleFactor());
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -85,7 +84,7 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
 
     @Redirect(method = "renderHoleBackground", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private void transparentHoleBackground(TextureManager instance, ResourceLocation resourceLocation) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (this.client.gameSettings.isTransparentBackground()) {
             Gui.drawRect(this.left, this.top, this.right, this.bottom, 0x66000000);//draw slot dark background
             //draw slot frame line
             Gui.drawRect(this.left, this.top, this.right, this.top - 1, 0xCC000000);
@@ -102,12 +101,12 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
 
     @Redirect(method = "renderHoleBackground", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;start()V", remap = false), remap = false)
     private void transparentHoleBackgroundStart(BufferBuilder instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.start();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.start();
     }
 
     @Redirect(method = "renderHoleBackground", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", remap = false), remap = false)
     private int transparentHoleBackgroundEnd(BufferBuilder instance) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue())
+        if (this.client.gameSettings.isTransparentBackground())
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         else instance.end();
         return 0;

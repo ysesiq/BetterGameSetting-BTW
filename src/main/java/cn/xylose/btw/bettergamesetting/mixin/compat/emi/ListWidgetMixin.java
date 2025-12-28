@@ -32,7 +32,7 @@ public abstract class ListWidgetMixin extends AbstractParentElement {
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TextureManager;bindTexture(Lnet/minecraft/src/ResourceLocation;)V"))
     private void transparentBackgroundBindTexture(TextureManager instance, ResourceLocation resourceLocation) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (this.client.gameSettings.isTransparentBackground()) {
             Gui.drawRect(this.left, this.top, this.right, this.bottom, 0x66000000);//draw slot dark background
             //draw slot frame line
             Gui.drawRect(this.left, this.top, this.right, this.top - 1, 0xCC000000);
@@ -46,47 +46,47 @@ public abstract class ListWidgetMixin extends AbstractParentElement {
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 0))
     private void transparentBackgroundStart(Tessellator instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.startDrawingQuads();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.startDrawingQuads();
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 0))
     private int transparentBackgroundEnd(Tessellator instance) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue())
+        if (this.client.gameSettings.isTransparentBackground())
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.draw();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.draw();
         return 0;
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 1))
     private void delGradientMatteStart(Tessellator instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.startDrawingQuads();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.startDrawingQuads();
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 1))
     private int delGradientMatteEnd(Tessellator instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.draw();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.draw();
         return 0;
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;startDrawingQuads()V", ordinal = 2))
     private void delGradientMatteStart1(Tessellator instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.startDrawingQuads();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.startDrawingQuads();
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 2))
     private int delGradientMatteEnd1(Tessellator instance) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) instance.draw();
+        if (!this.client.gameSettings.isTransparentBackground()) instance.draw();
         return 0;
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lemi/dev/emi/emi/screen/widget/config/ListWidget;renderList(Lemi/shims/java/net/minecraft/client/gui/DrawContext;IIIIF)V"))
     private void delRenderList(ListWidget instance, DrawContext context, int p, int o, int k, int l, float m) {
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) this.renderList(context, p, o, k, l, m);
+        if (!this.client.gameSettings.isTransparentBackground()) this.renderList(context, p, o, k, l, m);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 1, shift = At.Shift.AFTER))
     private void addRenderList(DrawContext draw, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (this.client.gameSettings.isTransparentBackground()) {
             int k = this.getRowLeft();
             int l = this.top + 4 - (int) this.getScrollAmount();
             ScaledResolution sr = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);

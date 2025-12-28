@@ -1,0 +1,43 @@
+{
+  "required": true,
+  "package": "cn.xylose.btw.bettergamesetting.mixin.sound",
+  "compatibilityLevel": "JAVA_17",
+  "target": "CLIENT",
+  "minVersion": "0.8.3",
+  "client": [
+    "block.BlockFireMixin",
+    "block.BlockFluidMixin",
+    "block.BlockNoteMixin",
+    "block.BlockPistonBaseMixin",
+    "block.BlockPortalMixin",
+    "client.audio.SoundManagerMixin",
+    "client.audio.SoundUpdaterMinecartMixin",
+    "client.gui.GuiSlotStatsMixin",
+    "client.render.RenderGlobalMixin",
+    "entity.EntityBatMixin",
+    "entity.EntityCowMixin",
+    "entity.EntitySlimeMixin",
+    "entity.EntityDragonMixin",
+    "entity.EntityFireworkRocketMixin",
+    "entity.EntityFireworkStarterFXMixin",
+    "entity.EntityGhastMixin",
+    "entity.EntityHorseMixin",
+    "entity.EntityLivingBaseMixin",
+    "entity.EntityMixin",
+    "entity.EntityOcelotMixin",
+    "entity.EntityPlayerMixin",
+    "entity.EntityPlayerSPMixin",
+    "entity.EntitySquidMixin",
+    "entity.EntityWolfMixin",
+    "item.ItemFireballMixin",
+    "item.ItemFlintAndSteelMixin",
+    "item.ItemFoodMixin",
+    "network.NetClientHandlerMixin",
+    "server.PlayerControllerMPMixin",
+    "world.ExplosionMixin",
+    "world.WorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

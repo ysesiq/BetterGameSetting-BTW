@@ -8,8 +8,17 @@ public class GuiSoundSetting extends GuiScreen {
     private GuiScreen parentGuiScreen;
     protected String screenTitle = "Sounds Settings";
     private GameSettings guiGameSettings;
-    private static EnumOptions[] audioOptions = new EnumOptions[] {EnumOptions.MUSIC, EnumOptions.SOUND
-//            , EnumOptionsExtra.RECORDS, EnumOptionsExtra.WEATHER, EnumOptionsExtra.BLOCKS, EnumOptionsExtra.MOBS, EnumOptionsExtra.ANIMALS, EnumOptionsExtra.PLAYERS, EnumOptionsExtra.AMBIENT
+    private static EnumOptions[] audioOptions = new EnumOptions[] {
+            EnumOptions.MUSIC,
+            EnumOptions.SOUND,
+            EnumOptionsExtra.RECORDS,
+            EnumOptionsExtra.WEATHER,
+            EnumOptionsExtra.BLOCKS,
+            EnumOptionsExtra.MOBS,
+            EnumOptionsExtra.ANIMALS,
+            EnumOptionsExtra.PLAYERS,
+            EnumOptionsExtra.AMBIENT,
+            EnumOptionsExtra.UI
     };
 
     public GuiSoundSetting(GuiScreen par1GuiScreen, GameSettings par2GameSettings) {

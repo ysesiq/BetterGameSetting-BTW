@@ -1,7 +1,7 @@
 package cn.xylose.btw.bettergamesetting.client.gui.resourcepack;
 
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionButton;
-import cn.xylose.btw.bettergamesetting.config.BGSConfig;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +17,13 @@ import org.lwjgl.Sys;
 public class GuiScreenResourcePacks extends GuiScreen {
     private static final Logger logger = Logger.getLogger("");
     private final GuiScreen parentScreen;
-    private List availableResourcePacks;
-    private List selectedResourcePacks;
-    private GuiResourcePackAvailable availableResourcePacksList;
-    private GuiResourcePackSelected selectedResourcePacksList;
+    private List<ResourcePackListEntry> availableResourcePacks;
+    private List<ResourcePackListEntry> selectedResourcePacks;
+    public GuiResourcePackAvailable availableResourcePacksList;
+    public GuiResourcePackSelected selectedResourcePacksList;
     private boolean changed = false;
+    private GuiTextField searchField;
+    private String lastSearchText = "";
 
     public GuiScreenResourcePacks(GuiScreen parentScreenIn) {
         this.parentScreen = parentScreenIn;
@@ -31,6 +33,11 @@ public class GuiScreenResourcePacks extends GuiScreen {
      * Adds the buttons (and other controls) to the screen in question.
      */
     public void initGui() {
+        this.searchField = new GuiTextField(this.fontRenderer, this.width / 2 - 100, 14, 200, 14);
+        this.searchField.setMaxStringLength(256);
+        this.searchField.setFocused(true);
+        this.searchField.setHint(I18n.getString("options.search"));
+
         this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.getString("resourcePack.openFolder")));
         this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.getString("gui.done")));
 
@@ -46,8 +53,7 @@ public class GuiScreenResourcePacks extends GuiScreen {
                 this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
             }
 
-            for (Object o : Lists.reverse(resourcepackrepository.getRepositoryEntries())) {
-                ResourcePackRepositoryEntry resourcepackrepository$entry1 = (ResourcePackRepositoryEntry) o;
+            for (ResourcePackRepositoryEntry resourcepackrepository$entry1 : (List<ResourcePackRepositoryEntry>) Lists.reverse(resourcepackrepository.getRepositoryEntries())) {
                 this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
             }
 
@@ -55,11 +61,47 @@ public class GuiScreenResourcePacks extends GuiScreen {
         }
 
         this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, this.availableResourcePacks);
-        this.availableResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
+        this.availableResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 - 15 - 200);
         this.availableResourcePacksList.registerScrollButtons(7, 8);
         this.selectedResourcePacksList = new GuiResourcePackSelected(this.mc, 200, this.height, this.selectedResourcePacks);
-        this.selectedResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 + 4);
+        this.selectedResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 + 15);
         this.selectedResourcePacksList.registerScrollButtons(7, 8);
+    }
+
+    private void filterResourcePacks() {
+        String searchText = this.searchField.getText().toLowerCase();
+        if (searchText.equals(this.lastSearchText)) {
+            return;
+        }
+        this.lastSearchText = searchText;
+
+        this.availableResourcePacks.clear();
+        this.selectedResourcePacks.clear();
+
+        ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
+        resourcepackrepository.updateRepositoryEntriesAll();
+        List<ResourcePackRepositoryEntry> list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
+        List<ResourcePackRepositoryEntry> selectedEntries = Lists.newArrayList(resourcepackrepository.getRepositoryEntries());
+        list.removeAll(selectedEntries);
+
+        for (ResourcePackRepositoryEntry resourcepackrepository$entry : list) {
+            ResourcePackListEntry entry = new ResourcePackListEntryFound(this, resourcepackrepository$entry);
+            if (entry.getPackName().toLowerCase().contains(searchText)) {
+                this.availableResourcePacks.add(entry);
+            }
+        }
+
+        for (ResourcePackRepositoryEntry resourcepackrepository$entry1 : Lists.reverse(selectedEntries)) {
+            ResourcePackListEntry entry = new ResourcePackListEntryFound(this, resourcepackrepository$entry1);
+            if (entry.getPackName().toLowerCase().contains(searchText)) {
+                this.selectedResourcePacks.add(entry);
+            }
+        }
+
+        ResourcePackListEntryDefault defaultEntry = new ResourcePackListEntryDefault(this);
+        if (searchText.isEmpty() || defaultEntry.getPackName().toLowerCase().contains(searchText)) {
+            this.selectedResourcePacks.add(defaultEntry);
+        }
     }
 
     public boolean hasResourcePackEntry(ResourcePackListEntry resourcePackListEntry) {
@@ -90,17 +132,17 @@ public class GuiScreenResourcePacks extends GuiScreen {
                         Runtime.getRuntime().exec(new String[]{"/usr/bin/open", s});
                         return;
                     } catch (IOException ioexception1) {
-                        logger.severe("Couldn\'t open file");
+                        logger.severe("Couldn't open file");
                         logger.severe(ioexception1.getMessage());
                     }
                 } else if (Util.getOSType() == EnumOS.WINDOWS) {
-                    String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[]{s});
+                    String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", s);
 
                     try {
                         Runtime.getRuntime().exec(s1);
                         return;
                     } catch (IOException ioexception) {
-                        logger.severe("Couldn\'t open file");
+                        logger.severe("Couldn't open file");
                         logger.severe(ioexception.getMessage());
                     }
                 }
@@ -109,10 +151,10 @@ public class GuiScreenResourcePacks extends GuiScreen {
 
                 try {
                     Class oclass = Class.forName("java.awt.Desktop");
-                    Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
-                    oclass.getMethod("browse", new Class[]{URI.class}).invoke(object, new Object[]{file1.toURI()});
+                    Object object = oclass.getMethod("getDesktop").invoke(null);
+                    oclass.getMethod("browse", URI.class).invoke(object, file1.toURI());
                 } catch (Throwable throwable) {
-                    logger.severe("Couldn\'t open link");
+                    logger.severe("Couldn't open link");
                     logger.severe(throwable.getMessage());
                     flag = true;
                 }
@@ -125,8 +167,7 @@ public class GuiScreenResourcePacks extends GuiScreen {
                 if (this.changed) {
                     List<ResourcePackRepositoryEntry> list = Lists.newArrayList();
 
-                    for (Object o : this.selectedResourcePacks) {
-                        ResourcePackListEntry resourcepacklistentry = (ResourcePackListEntry) o;
+                    for (ResourcePackListEntry resourcepacklistentry : this.selectedResourcePacks) {
                         if (resourcepacklistentry instanceof ResourcePackListEntryFound) {
                             list.add(((ResourcePackListEntryFound) resourcepacklistentry).func_148318_i());
                         }
@@ -154,13 +195,23 @@ public class GuiScreenResourcePacks extends GuiScreen {
         }
     }
 
+    protected void keyTyped(char typedChar, int keyCode) {
+        super.keyTyped(typedChar, keyCode);
+
+        if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
+            this.filterResourcePacks();
+        }
+    }
+
     /**
      * Called when the mouse is clicked.
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
         this.availableResourcePacksList.mouseClicked(mouseX, mouseY, mouseButton);
         this.selectedResourcePacksList.mouseClicked(mouseX, mouseY, mouseButton);
+        this.filterResourcePacks();
     }
 
     /**
@@ -175,12 +226,16 @@ public class GuiScreenResourcePacks extends GuiScreen {
      * Draws the screen and all the components in it.
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) this.drawDefaultBackground();
+        if (this.mc.gameSettings.isTransparentBackground()) this.drawDefaultBackground();
         else this.drawBackground(0);
         this.availableResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.fontRenderer, I18n.getString("resourcePack.title"), this.width / 2, 16, 16777215);
-        this.drawCenteredString(this.fontRenderer, I18n.getString("resourcePack.folderInfo"), this.width / 2 - 77, this.height - 26, 8421504);
+        this.drawCenteredString(this.fontRenderer, I18n.getString("resourcePack.title"), this.width / 2, 4, 16777215);
+        this.searchField.drawTextBox();
+        GuiButton buttonFolder = ScreenUtil.getInstance().getButtonById(2, this.buttonList);
+        if (buttonFolder != null && buttonFolder.func_82252_a()) {
+            ScreenUtil.getInstance().drawButtonTooltip(I18n.getString("resourcePack.folderInfo"), mouseX, mouseY);
+        }
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

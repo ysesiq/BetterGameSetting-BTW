@@ -1,5 +1,28 @@
 # Better Game Setting for BTW
 
+### v1.3.0
+* Adapted for 3.0.0 Release.
+* Optimized key bindings; now supports resetting mod keys.
+* Optimized the position of some buttons in the key binding interface.
+* Added the Create World interface from 1.19.4+.
+  * Ported and heavily modified from [CreateWorldUI](https://github.com/song682/CreateWorldUI).
+  * Added a Game Rules settings interface, and enabled modified game rules to take effect properly.
+* Enhanced the Sound Settings interface, though adjustments for some sound effects are not yet available.
+* Added a search box to the Resource Pack interface with a click-to-select highlight effect.
+* Reduced the size of text fields to match buttons of the same dimensions.
+* Lightened the border color of text fields when focused.
+* Added a scrolling text effect for long button text.
+* Added a search box to the Language interface, supporting searches by language code.
+* Optimized the tooltip logic in the Video Settings interface.
+* Optimized the rendering layer order for the new list interfaces added by this mod.
+* Added a confirmation window for using incompatible resource packs.
+* Introduced `IButton` and `ITextField` interfaces for quickly implementing features like position/size changes, text field hints, and scrolling text rendering.
+* Optimized some package names, class names, and code structure.
+* Fixed an issue where the "Force Unicode Font" button text would not update when switching languages.
+* Bundled the Fabric-ASM mod internally.
+
+---
+
 ### v1.2.3-fix
 * Fixed the issue where the open control gui crashed
 

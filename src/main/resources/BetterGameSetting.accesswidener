@@ -14,3 +14,16 @@ accessible field net/minecraft/src/SoundManager sndSystem Lpaulscode/sound/Sound
 accessible field net/minecraft/src/GameSettings renderDistance I
 accessible field net/minecraft/src/GuiChat defaultInputFieldText Ljava/lang/String;
 accessible method net/minecraft/src/GuiMainMenu renderSkybox (IIF)V
+
+accessible class net/minecraft/src/GameRuleValue
+accessible class net/minecraft/src/GuiSlotStats
+accessible class net/minecraft/src/GuiSlotLanguage
+accessible class net/minecraft/src/GuiButtonNextPage
+accessible class net/minecraft/src/GuiScreenTemporaryResourcePackSelectSelectionList
+
+
+accessible field net/minecraft/src/GuiTextField xPos I
+accessible field net/minecraft/src/GuiTextField yPos I
+mutable field net/minecraft/src/GuiTextField xPos I
+mutable field net/minecraft/src/GuiTextField yPos I
+accessible field net/minecraft/src/GuiTextField height I

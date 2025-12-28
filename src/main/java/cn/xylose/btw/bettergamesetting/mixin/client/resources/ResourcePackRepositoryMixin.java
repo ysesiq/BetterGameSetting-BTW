@@ -1,0 +1,36 @@
+package cn.xylose.btw.bettergamesetting.mixin.client.resources;
+
+import cn.xylose.btw.bettergamesetting.api.IResourcePackRepository;
+import net.minecraft.src.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.File;
+import java.util.List;
+
+@Mixin(ResourcePackRepository.class)
+public class ResourcePackRepositoryMixin implements IResourcePackRepository {
+    @Shadow private List repositoryEntries;
+    @Shadow private List repositoryEntriesAll;
+
+    @Inject(method = "<init>(Ljava/io/File;Lnet/minecraft/src/ResourcePack;Lnet/minecraft/src/MetadataSerializer;Lnet/minecraft/src/GameSettings;)V", at = @At("TAIL"))
+    private void loadResourcePacks(File resourcePack, ResourcePack metadataSerializer, MetadataSerializer gameSettings, GameSettings par4, CallbackInfo ci) {
+        for (String s : par4.getResourcePacks()) {
+            for (ResourcePackRepositoryEntry entry : (List<ResourcePackRepositoryEntry>) this.repositoryEntriesAll) {
+                if (entry.getResourcePackName().equals(s)) {
+                    this.repositoryEntries.add(entry);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setRepositories(List<ResourcePackRepositoryEntry> repositories) {
+        this.repositoryEntries.clear();
+        this.repositoryEntries.addAll(repositories);
+    }
+}

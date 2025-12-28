@@ -4,12 +4,16 @@ import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionButton;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiOptionSlider;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiScaleSlider;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import com.google.common.collect.Lists;
 import net.minecraft.src.EnumOptions;
 import net.minecraft.src.GuiButton;
+import net.minecraft.src.I18n;
 import net.minecraft.src.Minecraft;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GuiOptionsRowList extends GuiListExtended {
     public final List<GuiOptionsRowList.Row> optionsRowList = Lists.<GuiOptionsRowList.Row>newArrayList();
@@ -65,6 +69,39 @@ public class GuiOptionsRowList extends GuiListExtended {
         return super.getScrollBarX() + 32;
     }
 
+    @Override
+    protected void drawTooltip(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY) {
+        Row row = this.getListEntry(slotIndex);
+        this.drawTooltipsStream(row, mouseX, mouseY);
+    }
+
+    private void drawTooltipsStream(Row row, int mouseX, int mouseY) {
+        Stream.of(row.buttonLeft, row.buttonRight)
+                .filter(Objects::nonNull)
+                .filter(GuiButton::func_82252_a)
+                .findFirst()
+                .ifPresent(button -> {
+                    String tooltipKey = getTooltipKey(button);
+                    if (tooltipKey != null) {
+                        ScreenUtil.getInstance().drawButtonTooltipTranslated(tooltipKey, mouseX, mouseY);
+                    }
+                });
+    }
+
+    private String getTooltipKey(GuiButton button) {
+        if (button instanceof GuiOptionButton optionButton) {
+            return getTranslatedTooltipKey(optionButton.returnEnumOptions().getEnumString());
+        } else if (button instanceof GuiOptionSlider sliderButton) {
+            return getTranslatedTooltipKey(sliderButton.options.getEnumString());
+        }
+        return null;
+    }
+
+    private String getTranslatedTooltipKey(String baseKey) {
+        String tooltipKey = baseKey + ".description";
+        return !I18n.getString(tooltipKey).equals(tooltipKey) ? tooltipKey : null;
+    }
+
     public static class Row implements GuiListExtended.IGuiListEntry {
         private final Minecraft minecraft = Minecraft.getMinecraft();
         private final GuiButton buttonLeft;
@@ -84,30 +121,6 @@ public class GuiOptionsRowList extends GuiListExtended {
             if (this.buttonRight != null) {
                 this.buttonRight.yPosition = y;
                 this.buttonRight.drawButton(this.minecraft, mouseX, mouseY);
-            }
-
-            if (this.buttonLeft instanceof GuiOptionButton button) {
-                if (button.isMouseOver(mouseX, mouseY)) {
-                    button.drawTooltip(button.returnEnumOptions().getEnumString() + ".desc", mouseX, mouseY);
-                }
-            }
-
-            if (this.buttonRight instanceof GuiOptionButton button) {
-                if (button.isMouseOver(mouseX, mouseY)) {
-                    button.drawTooltip(button.returnEnumOptions().getEnumString() + ".desc", mouseX, mouseY);
-                }
-            }
-
-            if (this.buttonLeft instanceof GuiOptionSlider button) {
-                if (button.isMouseOver(mouseX, mouseY)) {
-                    button.drawTooltip(button.options.getEnumString() + ".desc", mouseX, mouseY);
-                }
-            }
-
-            if (this.buttonRight instanceof GuiOptionSlider button) {
-                if (button.isMouseOver(mouseX, mouseY)) {
-                    button.drawTooltip(button.options.getEnumString() + ".desc", mouseX, mouseY);
-                }
             }
         }
 
@@ -141,7 +154,10 @@ public class GuiOptionsRowList extends GuiListExtended {
             }
         }
 
-        public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_) {
+        public void keyTyped(int slotIndex, char typedChar, int keyCode) {
+        }
+
+        public void setSelected(int slotIndex, int mouseX, int mouseY) {
         }
     }
 }

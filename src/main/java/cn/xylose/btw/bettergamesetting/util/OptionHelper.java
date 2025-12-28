@@ -1,17 +1,10 @@
 package cn.xylose.btw.bettergamesetting.util;
 
-import com.google.gson.Gson;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Unique;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class OptionHelper {
-    public static final Gson gson = new Gson();
-    public List<String> resourcePacks = new ArrayList<>();
     public static final ParameterizedType typeListString = new ParameterizedType() {
         public Type[] getActualTypeArguments() {
             return new Type[]{String.class};

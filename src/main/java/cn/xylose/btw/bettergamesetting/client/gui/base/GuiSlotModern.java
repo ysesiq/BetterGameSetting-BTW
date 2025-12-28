@@ -28,6 +28,7 @@ public abstract class GuiSlotModern {
     private boolean hasListHeader;
     public int headerPadding;
     private boolean enabled = true;
+    protected int selectionBoxColor = 0x808080;
 
     public GuiSlotModern(Minecraft client, int width, int height, int top, int bottom, int slotHeight) {
         this.client = client;
@@ -276,29 +277,14 @@ public abstract class GuiSlotModern {
         GL11.glDisable(GL11.GL_FOG);
         Tessellator tessellator = Tessellator.instance;
         drawContainerBackground(tessellator);
-        ScaledResolution sr = new ScaledResolution(this.client.gameSettings, this.client.displayWidth, this.client.displayHeight);
-        GL11.glScissor((this.left * sr.getScaleFactor()), (this.client.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        l1 = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
-        i2 = this.top + 4 - (int) this.amountScrolled;
-
-        if (this.hasListHeader) {
-            this.drawListHeader(l1, i2, tessellator);
-        }
-
-        this.drawSelectionBox(l1, i2, mouseXR, mouseYR);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
         byte b0 = 4;
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        this.overlayBackground(0, this.top, 255, 255);
-        this.overlayBackground(this.bottom, this.height, 255, 255);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(770, 771);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         // draw top and bottom block gradient matte
-        if (!BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (!this.client.gameSettings.isTransparentBackground()) {
             tessellator.startDrawingQuads();
             tessellator.setColorRGBA_I(0, 0);
             tessellator.addVertexWithUV(this.left, (this.top + b0), 0.0D, 0.0D, 1.0D);
@@ -363,6 +349,30 @@ public abstract class GuiSlotModern {
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
+        ScaledResolution sr = new ScaledResolution(this.client.gameSettings, this.client.displayWidth, this.client.displayHeight);
+        GL11.glScissor((this.left * sr.getScaleFactor()), (this.client.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        l1 = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
+        i2 = this.top + 4 - (int) this.amountScrolled;
+
+        if (this.hasListHeader) {
+            this.drawListHeader(l1, i2, tessellator);
+        }
+
+        this.drawSelectionBox(l1, i2, mouseXR, mouseYR);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        this.overlayBackground(0, this.top, 255, 255);
+        this.overlayBackground(this.bottom, this.height, 255, 255);
+
+        if (this instanceof GuiListExtended) {
+            int slotIndex = this.getSlotIndexFromScreenCoords(mouseXR, mouseYR);
+            if (slotIndex >= 0) {
+                int slotX = l1;
+                int slotY = i2 + slotIndex * this.slotHeight + this.headerPadding;
+                ((GuiListExtended)this).drawTooltip(slotIndex, slotX, slotY, this.getListWidth(), this.slotHeight, mouseXR, mouseYR);
+            }
+        }
     }
 
     public void setEnabled(boolean enabledIn) {
@@ -398,7 +408,7 @@ public abstract class GuiSlotModern {
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     GL11.glDisable(GL11.GL_TEXTURE_2D);
                     tessellator.startDrawingQuads();
-                    tessellator.setColorOpaque_I(8421504);
+                    tessellator.setColorOpaque_I(this.selectionBoxColor);
                     tessellator.addVertexWithUV(i2, k1 + l1 + 2, 0.0D, 0.0D, 1.0D);
                     tessellator.addVertexWithUV(j2, k1 + l1 + 2, 0.0D, 1.0D, 1.0D);
                     tessellator.addVertexWithUV(j2, k1 - 2, 0.0D, 1.0D, 0.0D);
@@ -425,7 +435,7 @@ public abstract class GuiSlotModern {
      * Overlays the background to hide scrolled items
      */
     private void overlayBackground(int startY, int endY, int startAlpha, int endAlpha) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) return;
+        if (this.client.gameSettings.isTransparentBackground()) return;
         Tessellator tessellator = Tessellator.instance;
         this.client.getTextureManager().bindTexture(Gui.optionsBackground);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -453,7 +463,7 @@ public abstract class GuiSlotModern {
     }
 
     protected void drawContainerBackground(Tessellator tessellator) {
-        if (BGSConfig.TRANSPARENT_BACKGROUND.getValue()) {
+        if (this.client.gameSettings.isTransparentBackground()) {
             Gui.drawRect(this.left, this.top, this.right, this.bottom, 0x66000000);//draw slot dark background
             //draw slot frame line
             Gui.drawRect(this.left, this.top, this.right, this.top - 1, 0xCC000000);

@@ -5,11 +5,16 @@ import api.BTWAddon;
 import cn.xylose.btw.bettergamesetting.config.BGSConfigManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.src.GameRules;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BGSClient extends BTWAddon implements ClientModInitializer {
     public static String resourceId = "bgs";
+    public static final Map<String, String> DEFAULT_GAMERULE_VALUE = new HashMap<>();
+    public static final GameRules gameRules = new GameRules();
+    public static Map<String, String> pendingRules = new HashMap<>();
 
     @Override
     public void postSetup() {

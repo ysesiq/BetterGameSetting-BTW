@@ -8,16 +8,18 @@
     "modmenu": ">=10.0.0"
   },
   "environment": "client",
-  "name": "BetterGameSetting-BTW",
+  "name": "BetterGameSetting",
   "icon": "assets/bgs/bgs_icon.png",
-  "description": "1.7.2+ Game Setting Gui",
+  "description": "1.7.2+ Game Setting Gui & Fixes the FontRenderer",
   "authors": [
     "Xy_Lose"
   ],
   "contributors": [
     "jaredlll08",
     "ThexXTURBOXx",
-    "lss233"
+    "lss233",
+    "Debris",
+    "dfdvdsf"
   ],
   "contact": {
     "homepage": "https://github.com/ysesiq/BetterGameSetting-BTW",
@@ -25,7 +27,6 @@
   },
   "entrypoints": {
     "preLaunch": [
-      "cn.xylose.btw.bettergamesetting.init.BGSEarlyRiser",
       "com.github.skystardust.InputMethodBlocker.IMBlockerEarlyRiser"
     ],
     "client": [
@@ -37,18 +38,25 @@
     ],
     "modmenu": [
       "cn.xylose.btw.bettergamesetting.config.BGSModMenuCompat"
+    ],
+    "mm:early_risers": [
+      "cn.xylose.btw.bettergamesetting.init.BGSEarlyRiser"
     ]
   },
   "mixins": [
-    "BetterGameSetting.mixins.json",
-    "BetterGameSetting.compat.mixins.json"
+    "BetterGameSetting.client.mixins.json",
+    "BetterGameSetting.common.mixins.json",
+    "BetterGameSetting.compat.mixins.json",
+    "BetterGameSetting.sound.mixins.json"
   ],
   "accessWidener": "BetterGameSetting.accesswidener",
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/src/EnumOptions": ["cn/xylose/btw/bettergamesetting/api/IEnumOptions"],
       "net/minecraft/src/GameSettings": ["cn/xylose/btw/bettergamesetting/api/IGameSetting"],
-      "net/minecraft/src/KeyBinding": ["cn/xylose/btw/bettergamesetting/api/IKeyBinding", "java/lang/Comparable"]
+      "net/minecraft/src/KeyBinding": ["cn/xylose/btw/bettergamesetting/api/IKeyBinding", "java/lang/Comparable"],
+      "net/minecraft/src/GuiButton": ["cn/xylose/btw/bettergamesetting/api/IButton"],
+      "net/minecraft/src/GuiTextField": ["cn/xylose/btw/bettergamesetting/api/ITextField"]
     },
     "modmenu:clientsideOnly": true
   }

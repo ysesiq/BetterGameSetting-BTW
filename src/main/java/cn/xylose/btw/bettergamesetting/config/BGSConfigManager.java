@@ -84,6 +84,7 @@ public class BGSConfigManager {
             System.err.println("Couldn't load Mod Menu configuration file; reverting to defaults");
             e.printStackTrace();
         }
+        System.out.println("load finish");
     }
 
     @SuppressWarnings("unchecked")
