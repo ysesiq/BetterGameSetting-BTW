@@ -4,8 +4,8 @@
   "version": "${version}",
   "depends": {
     "minecraft": "1.6.4",
-    "btw": "*",
-    "modmenu": ">=10.0.0"
+    "btw": "3.x.x",
+    "modmenu": ">=10.1.0"
   },
   "environment": "client",
   "name": "BetterGameSetting",
