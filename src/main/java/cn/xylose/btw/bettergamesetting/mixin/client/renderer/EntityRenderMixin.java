@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import cn.xylose.btw.bettergamesetting.util.OptionHelper;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -89,5 +90,13 @@ public abstract class EntityRenderMixin {
             return var4 + this.prevDebugCamFOV + (this.debugCamFOV - this.prevDebugCamFOV) * par1;
         }
         return original;
+    }
+
+    @ModifyExpressionValue(
+            method = "orientCamera",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;fovSetting:F")
+    )
+    private float normalizeFovForThirdPersonCameraCollision(float original) {
+        return OptionHelper.normalizeValue(original, 30.0F, 110.0F, 1.0F);
     }
 }
