@@ -26,7 +26,7 @@ public abstract class EnumOptionsMixin implements IEnumOptions {
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void setMinMaxStepValue(CallbackInfo ci) {
-        GAMMA.setValue(GAMMA_MIN, GAMMA_DEFAULT, GAMMA_STEP);
+        GAMMA.setValue(GAMMA_MIN, GAMMA_MAX, GAMMA_STEP);
         RENDER_DISTANCE.setValue(RENDER_DISTANCE_MIN, RENDER_DISTANCE_MAX, RENDER_DISTANCE_STEP);
         FRAMERATE_LIMIT.setValue(FPS_LIMIT_MIN, FPS_LIMIT_MAX, FPS_LIMIT_STEP);
         GUI_SCALE.setValue(GUI_SCALE_MIN, GUI_SCALE_MAX, GUI_SCALE_STEP);

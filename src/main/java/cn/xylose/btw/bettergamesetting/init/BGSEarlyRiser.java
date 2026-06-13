@@ -26,6 +26,7 @@ public class BGSEarlyRiser implements Runnable {
 //              .addEnum("FULLSCREEN_RESOLUTION", "options.fullscreenResolution", true, false)
                 .addEnum("TRANSPARENT_BACKGROUND", "options.transparentBackground", false, true)
                 .addEnum("HIGHLIGHT_BUTTON_TEXT", "options.highlightButtonText", false, true)
+                .addEnum("DEFER_CHUNK_UPDATES", "options.deferChunkUpdates", false, true)
                 .build();
     }
 }

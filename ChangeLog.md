@@ -1,5 +1,10 @@
 # Better Game Setting for BTW
 
+### v1.4.0.1
+* Added defer chunk updates option
+* Fixed an issue where the maximum brightness option was incorrect
+
+---
 
 ### v1.4.0
 * The required BTWCE version has been changed to version 3.1.0 or above

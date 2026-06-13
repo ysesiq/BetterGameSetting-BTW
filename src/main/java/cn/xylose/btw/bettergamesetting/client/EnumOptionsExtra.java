@@ -16,4 +16,5 @@ public class EnumOptionsExtra {
 //    public static EnumOptions FULLSCREEN_RESOLUTION = ClassTinkerers.getEnum(EnumOptions.class, "FULLSCREEN_RESOLUTION");
     public static EnumOptions TRANSPARENT_BACKGROUND = ClassTinkerers.getEnum(EnumOptions.class, "TRANSPARENT_BACKGROUND");
     public static EnumOptions HIGHLIGHT_BUTTON_TEXT = ClassTinkerers.getEnum(EnumOptions.class, "HIGHLIGHT_BUTTON_TEXT");
+    public static EnumOptions DEFER_CHUNK_UPDATES = ClassTinkerers.getEnum(EnumOptions.class, "DEFER_CHUNK_UPDATES");
 }

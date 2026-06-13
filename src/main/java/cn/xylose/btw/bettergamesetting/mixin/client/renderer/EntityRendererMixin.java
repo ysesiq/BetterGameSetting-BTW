@@ -6,16 +6,23 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import cn.xylose.btw.bettergamesetting.util.OptionHelper;
+import com.prupe.mcpatcher.renderpass.RenderPass;
 import net.minecraft.src.*;
+import org.lwjgl.opengl.GL11;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import static net.minecraft.src.EntityRenderer.anaglyphField;
 
 @Mixin(value = EntityRenderer.class, priority = 999)
 public abstract class EntityRendererMixin {
@@ -29,7 +36,43 @@ public abstract class EntityRendererMixin {
     @Shadow private float fovModifierHandPrev;
     @Shadow private float fovModifierHand;
     @Shadow protected abstract void setupFog(int par1, float par2);
-
+    
+    @Shadow
+    private boolean lightmapUpdateNeeded;
+    
+    @Shadow
+    protected abstract void modUpdateLightmap(float fPartialTicks);
+    
+    @Shadow
+    public abstract void getMouseOver(float par1);
+    
+    @Shadow
+    protected abstract void updateFogColor(float par1);
+    
+    @Shadow
+    protected abstract void setupCameraTransform(float par1, int par2);
+    
+    @Shadow
+    protected abstract void renderCloudsCheck(RenderGlobal par1RenderGlobal, float par2);
+    
+    @Shadow
+    public int debugViewDirection;
+    
+    @Shadow
+    public abstract void enableLightmap(double par1);
+    
+    @Shadow
+    public abstract void disableLightmap(double par1);
+    
+    @Shadow
+    protected abstract void renderRainSnow(float par1);
+    
+    @Shadow
+    private double cameraZoom;
+    
+    @Shadow
+    protected abstract void renderHand(float par1, int par2);
+    
     @ModifyConstant(method = "updateRenderer", constant = @Constant(intValue = 3))
     private int modifyRD(int constant) {
         return this.mc.gameSettings.renderDistance * 2;
@@ -53,6 +96,28 @@ public abstract class EntityRendererMixin {
             this.mc.mcProfiler.endStartSection("sky");
             renderGlobal.renderSky(par1);
         }
+    }
+    
+    @ModifyVariable(
+            method = "renderWorld",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/src/RenderGlobal;updateRenderers(Lnet/minecraft/src/EntityLivingBase;Z)Z",
+                    shift = At.Shift.BY,
+                    by = 2
+            ),
+            ordinal = 0)
+    private long modifyTimeoutCheck(long remainingTime, float partialTicks, long renderTime) {
+        if (this.mc.gameSettings.isDeferChunkUpdates()) {
+            if (remainingTime < 1000000L || remainingTime > 1000000000L) {
+                return -1L;
+            }
+        } else {
+            if (remainingTime < 0L || remainingTime > 1000000000L) {
+                return -1L;
+            }
+        }
+        return remainingTime;
     }
 
     @Inject(method = "updateFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldClient;getRainStrength(F)F"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
