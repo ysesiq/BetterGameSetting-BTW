@@ -8,11 +8,12 @@ public class GuiVideoSettings extends GuiScreen {
     public GuiScreen parentGuiScreen;
     protected String screenTitle = "Video Settings";
     private GameSettings guiGameSettings;
-    private GuiListExtended optionsRowList;
+    private GuiOptionsRowList optionsRowList;
     /**
      * An array of all of EnumOptions's video options.
      */
     private static final EnumOptions[] videoOptions = new EnumOptions[]{
+//            EnumOptionsExtra.FULLSCREEN_RESOLUTION,
             EnumOptions.GRAPHICS,
             EnumOptions.RENDER_DISTANCE,
             EnumOptions.AMBIENT_OCCLUSION,
@@ -24,10 +25,10 @@ public class GuiVideoSettings extends GuiScreen {
             EnumOptions.GAMMA,
             EnumOptions.RENDER_CLOUDS,
             EnumOptions.PARTICLES,
-            EnumOptions.USE_SERVER_TEXTURES,
             EnumOptions.USE_FULLSCREEN,
             EnumOptions.BORDERLESS_FULLSCREEN,
             EnumOptions.ENABLE_VSYNC,
+            EnumOptions.USE_SERVER_TEXTURES,
             EnumOptionsExtra.TRANSPARENT_BACKGROUND,
             EnumOptionsExtra.HIGHLIGHT_BUTTON_TEXT
 //            ,EnumOptions.MIPMAP_LEVELS, EnumOptions.ANISOTROPIC_FILTERING

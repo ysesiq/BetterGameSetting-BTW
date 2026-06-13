@@ -1,6 +1,7 @@
 package cn.xylose.btw.bettergamesetting.util;
 
-import net.minecraft.src.*;
+import net.minecraft.src.GuiMainMenu;
+import net.minecraft.src.GuiScreen;
 
 public class GuiScreenPanoramaHelp extends GuiMainMenu {
     public static GuiMainMenu panoramaDummy = new GuiMainMenu();

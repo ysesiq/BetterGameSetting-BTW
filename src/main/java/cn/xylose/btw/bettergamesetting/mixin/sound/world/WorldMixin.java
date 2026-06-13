@@ -11,17 +11,17 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(World.class)
 public class WorldMixin {
 
-    @WrapOperation(
-            method = "playSoundAtEntity",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/src/IWorldAccess;playSound(Ljava/lang/String;DDDFF)V"
-            )
-    )
-    private void wrapEntitySound(IWorldAccess instance, String s, double x, double y, double z, float v, float p, Operation<Void> original) {
-        float scale = resolveEntityVolume(s);
-        instance.playSound(s, x, y, z, v * scale, p);
-    }
+//    @WrapOperation(
+//            method = "playSoundAtEntity",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/src/IWorldAccess;playSound(Ljava/lang/String;DDDFF)V"
+//            )
+//    )
+//    private void wrapEntitySound(IWorldAccess instance, String s, double x, double y, double z, float v, float p, Operation<Void> original) {
+//        float scale = resolveEntityVolume(s);
+//        instance.playSound(s, x, y, z, v * scale, p);
+//    }
 
     private static float resolveEntityVolume(String sound) {
         Minecraft mc = Minecraft.getMinecraft();

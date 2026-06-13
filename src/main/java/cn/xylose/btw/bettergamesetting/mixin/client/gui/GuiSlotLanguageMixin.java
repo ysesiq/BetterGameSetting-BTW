@@ -1,6 +1,9 @@
 package cn.xylose.btw.bettergamesetting.mixin.client.gui;
 
-import cn.xylose.btw.bettergamesetting.api.GuiSlotLanguageInvoker;
+import cn.xylose.btw.bettergamesetting.init.BGSClient;
+import cn.xylose.btw.bettergamesetting.api.IGuiSlotLanguage;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,11 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(GuiSlotLanguage.class)
-public abstract class GuiSlotLanguageMixin extends GuiSlot implements GuiSlotLanguageInvoker {
+public abstract class GuiSlotLanguageMixin extends GuiSlot implements IGuiSlotLanguage {
     @Shadow @Final private List<String> field_77251_g;
     @Shadow @Final private Map<String, Language> field_77253_h;
-
     @Shadow @Final GuiLanguage languageGui;
+
     @Unique private List<String> filteredLanguages = new ArrayList<>();
 
     public GuiSlotLanguageMixin(Minecraft par1Minecraft, int par2, int par3, int par4, int par5, int par6) {
@@ -32,13 +35,22 @@ public abstract class GuiSlotLanguageMixin extends GuiSlot implements GuiSlotLan
         this.filteredLanguages.addAll(this.field_77251_g);
     }
 
+    @WrapOperation(method = "elementClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Minecraft;refreshResources()V"))
+    private void noRefreshResource(Minecraft instance, Operation<Void> original) {
+        instance.getLanguageManager().onResourceManagerReload(instance.getResourceManager());
+    }
+
     @Inject(method = "elementClicked", at = @At("TAIL"))
     private void refreshGui(int bl, boolean par2, CallbackInfo ci) {
         this.languageGui.initGui();
     }
 
+    @Inject(method = "elementClicked", at = @At("HEAD"))
+    private void saveScrollAmount(int bl, boolean par2, CallbackInfo ci) {
+        BGSClient.scrollAmount = (int) this.amountScrolled;
+    }
+
     @Unique
-    @Override
     public void updateFilteredLanguages(String filterText) {
         this.filteredLanguages.clear();
 

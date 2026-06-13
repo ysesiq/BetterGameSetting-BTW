@@ -1,5 +1,40 @@
 # Better Game Setting for BTW
 
+
+### v1.4.0
+* The required BTWCE version has been changed to version 3.1.0 or above
+* Changed the slider in the video settings interface to take effect only after releasing
+* Render distance adjustment
+  + The actual render distance is now consistent with the render distance displayed on the button
+  + The maximum render distance has been changed to 32 chunks
+    - It is highly not recommended to adjust the render distance above 16 chunks
+    - Consumes too much memory; 32 chunks will take up approximately 8 to 12 GB of RAM
+    - Lag when generating new chunks
+    - Slow world saving
+* Create World screen adjustments
+  + Optimized Tab button height and spacing
+* Added support for setting keybinding categories for mod keybindings
+  + Example
+```java
+// No dependency on BetterGameSetting required, but requires three translation texts: key.categories.example, key.example, and key.categories.example:key.example
+public static KeyBinding keyExample = new KeyBinding("key.categories.example:key.example", Keyboard.KEY_NONE);
+// Requires dependency on BetterGameSetting
+KeyBindingExtra.setKeyKeyCategory(this.keyExample.keyDescription, "key.categories.example");
+```
+* Added a search box and type filtering to the Game Rules screen
+  + Added ability to modify game rules within the world via World Options
+* Significantly optimized language switching performance, enabling instant language switching
+* Optimized the text display of the brightness option
+* Fixed an issue where some list elements were still rendering even when out of bounds
+* Optimized code
+
+---
+
+### v1.3.0.2 & v1.3.0.3 (by Maro)
+* Fixed rendering issues when using third-person view
+
+---
+
 ### v1.3.0.1
 * Fixed some compatibility issues
 * Fixed an unresponsive issue

@@ -1,6 +1,7 @@
 package cn.xylose.btw.bettergamesetting.mixin.compat.modmenu;
 
 import cn.xylose.btw.bettergamesetting.config.BGSConfig;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.terraformersmc.modmenu.gui.widget.DescriptionListWidget;
 import com.terraformersmc.modmenu.gui.widget.entries.EntryListWidget;
@@ -29,9 +30,7 @@ public abstract class DescriptionListWidgetMixin extends EntryListWidget {
             Gui.drawRect(this.left, this.bottom, this.right, this.bottom + 1, 0xCC000000);
             Gui.drawRect(this.left, this.top - 1, this.right, this.top - 2, 0x66ADB1B1);
             Gui.drawRect(this.left, this.bottom + 1, this.right, this.bottom + 2, 0x66ADB1B1);
-            ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
-            GL11.glScissor((this.left * sr.getScaleFactor()), (minecraft.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorHead(this.left, this.top, this.right, this.bottom - this.top);
         } else {
             instance.bindTexture(resourceLocation);
         }
@@ -45,7 +44,7 @@ public abstract class DescriptionListWidgetMixin extends EntryListWidget {
     @Redirect(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", ordinal = 0))
     private int transparentBackgroundEnd(BufferBuilder instance) {
         if (this.minecraft.gameSettings.isTransparentBackground())
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorTail();
         else instance.end();
         return 0;
     }

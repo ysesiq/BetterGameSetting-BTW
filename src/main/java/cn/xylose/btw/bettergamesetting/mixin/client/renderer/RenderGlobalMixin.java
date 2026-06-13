@@ -1,12 +1,12 @@
 package cn.xylose.btw.bettergamesetting.mixin.client.renderer;
 
-//import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-//import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderGlobal.class)
@@ -15,7 +15,11 @@ public abstract class RenderGlobalMixin {
     @Shadow private int renderDistance;
     @Shadow private int renderChunksTall;
     @Shadow private int renderChunksDeep;
-    @Shadow private Minecraft mc;
+    
+   @ModifyConstant(method = "<init>", constant = @Constant(intValue = 32))
+    private int modify(int constant) {
+        return 64;
+    }
 
     @Inject(method = "loadRenderers", at = @At(value = "FIELD", target = "Lnet/minecraft/src/RenderGlobal;renderChunksDeep:I", shift = At.Shift.AFTER))
     private void loadRenderers(CallbackInfo ci) {
@@ -24,21 +28,4 @@ public abstract class RenderGlobalMixin {
         this.renderChunksTall = 16;
         this.renderChunksDeep = var1;
     }
-
-//    @WrapOperation(method = "playAuxSFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/SoundManager;playSound(Ljava/lang/String;FFFFF)V"))
-//    private void blockDestroyVolume(SoundManager instance, String var9, float var7, float v, float par1Str, float par2, float par3, Operation<Void> original) {
-//        instance.playSound(var9, var7, v, par1Str, ((IGameSetting) this.mc.gameSettings).getBlockVolume() * par2, par3);
-//    }
-//    @WrapOperation(method = "playAuxSFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/WorldClient;playSound(DDDLjava/lang/String;FFZ)V", ordinal = 16))
-//    public void anvilVolume_0(WorldClient instance, double v, double par1, double par3, String par5, float par7Str, float par8, boolean par9, Operation<Void> original) {
-//        instance.playSound(v, par1, par3, par5, ((IGameSetting) this.mc.gameSettings).getBlockVolume() * par7Str, par8, par9);
-//    }
-//    @WrapOperation(method = "playAuxSFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/WorldClient;playSound(DDDLjava/lang/String;FFZ)V", ordinal = 17))
-//    public void anvilVolume_1(WorldClient instance, double v, double par1, double par3, String par5, float par7Str, float par8, boolean par9, Operation<Void> original) {
-//        instance.playSound(v, par1, par3, par5, ((IGameSetting) this.mc.gameSettings).getBlockVolume() * par7Str, par8, par9);
-//    }
-//    @WrapOperation(method = "playAuxSFX", at = @At(value = "INVOKE", target = "Lnet/minecraft/WorldClient;playSound(DDDLjava/lang/String;FFZ)V", ordinal = 18))
-//    public void anvilVolume_2(WorldClient instance, double v, double par1, double par3, String par5, float par7Str, float par8, boolean par9, Operation<Void> original) {
-//        instance.playSound(v, par1, par3, par5, ((IGameSetting) this.mc.gameSettings).getBlockVolume() * par7Str, par8, par9);
-//    }
 }

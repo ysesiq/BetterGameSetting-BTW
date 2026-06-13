@@ -2,6 +2,7 @@ package cn.xylose.btw.bettergamesetting.mixin.compat.emi;
 
 import cn.xylose.btw.bettergamesetting.config.BGSConfig;
 import cn.xylose.btw.bettergamesetting.util.GuiScreenPanoramaHelp;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import emi.dev.emi.emi.screen.widget.config.ListWidget;
 import emi.shims.java.net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.src.*;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import emi.shims.java.net.minecraft.client.gui.DrawContext;
 
-@Mixin(value = ListWidget.class)
+@Mixin(value = ListWidget.class, remap = false)
 public abstract class ListWidgetMixin extends AbstractParentElement {
     @Shadow(remap = false) protected int left;
     @Shadow(remap = false) protected int top;
@@ -25,7 +26,6 @@ public abstract class ListWidgetMixin extends AbstractParentElement {
     @Shadow(remap = false) protected int width;
     @Shadow(remap = false) protected int height;
     @Shadow(remap = false) @Final protected Minecraft client;
-
     @Shadow(remap = false) public abstract int getRowLeft();
     @Shadow(remap = false) public abstract double getScrollAmount();
     @Shadow(remap = false) protected abstract void renderList(DrawContext draw, int x, int y, int mouseX, int mouseY, float delta);
@@ -52,7 +52,7 @@ public abstract class ListWidgetMixin extends AbstractParentElement {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Tessellator;draw()I", ordinal = 0))
     private int transparentBackgroundEnd(Tessellator instance) {
         if (this.client.gameSettings.isTransparentBackground())
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorTail();
         if (!this.client.gameSettings.isTransparentBackground()) instance.draw();
         return 0;
     }
@@ -89,11 +89,9 @@ public abstract class ListWidgetMixin extends AbstractParentElement {
         if (this.client.gameSettings.isTransparentBackground()) {
             int k = this.getRowLeft();
             int l = this.top + 4 - (int) this.getScrollAmount();
-            ScaledResolution sr = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);
-            GL11.glScissor((this.left * sr.getScaleFactor()), (client.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            this.renderList(draw, k, l, mouseX, mouseY, delta);
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+			ScreenUtil.scissorExecute(this.left, this.top, this.right, this.bottom - this.top, () -> {
+                this.renderList(draw, k, l, mouseX, mouseY, delta);
+            });
         }
     }
 }

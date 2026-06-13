@@ -1,6 +1,6 @@
 package cn.xylose.btw.bettergamesetting.client.gui.controls;
 
-import cn.xylose.btw.bettergamesetting.api.IKeyBinding;
+import cn.xylose.btw.bettergamesetting.client.KeyBindingExtra;
 import cn.xylose.btw.bettergamesetting.client.gui.base.GuiListExtended;
 import net.minecraft.src.*;
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,13 +18,13 @@ public class GuiKeyBindingList extends GuiListExtended {
         this.guiControls = controls;
         this.mc = mcIn;
         KeyBinding[] akeybinding = ArrayUtils.clone(mcIn.gameSettings.keyBindings);
-        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + 6)];//6 key Categories
+        this.listEntries = new IGuiListEntry[(int) (akeybinding.length + KeyBindingExtra.getKeyCategoryCount())];
         Arrays.sort(akeybinding);
         int i = 0;
         String s = null;
 
         for (KeyBinding keybinding : akeybinding) {
-            String s1 = keybinding.getKeyCategory(keybinding.keyDescription);
+            String s1 = KeyBindingExtra.getKeyCategory(keybinding.keyDescription);
 //            String s1 = keybinding.keyDescription;
 
             if (!s1.equals(s)) {
@@ -50,10 +50,6 @@ public class GuiKeyBindingList extends GuiListExtended {
 //        this.getListEntry(par1).drawEntry(par1, par2, par3, super.width, super.slotHeight, Mouse.getX(), Mouse.getY(), ((IGuiSlot) this).getSlotIndexFromScreenCoords(Mouse.getY(), Mouse.getX()) == par1);
 //    }
 
-    @Override
-    protected void drawTooltip(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY) {
-    }
-
     public IGuiListEntry getListEntry(int index) {
         return this.listEntries[index];
     }
@@ -70,8 +66,8 @@ public class GuiKeyBindingList extends GuiListExtended {
         private final String labelText;
         private final int labelWidth;
 
-        public CategoryEntry(String p_i45028_2_) {
-            this.labelText = I18n.getString(p_i45028_2_);
+        public CategoryEntry(String label) {
+            this.labelText = I18n.getString(label);
             this.labelWidth = GuiKeyBindingList.this.mc.fontRenderer.getStringWidth(this.labelText);
         }
 
@@ -86,6 +82,7 @@ public class GuiKeyBindingList extends GuiListExtended {
         public void mouseReleased(int slotIndex, int x, int y, int mouseEvent, int relativeX, int relativeY) {
         }
 
+        @Override
         public void keyTyped(int slotIndex, char typedChar, int keyCode) {
         }
 
@@ -154,6 +151,7 @@ public class GuiKeyBindingList extends GuiListExtended {
             this.btnReset.mouseReleased(x, y);
         }
 
+        @Override
         public void keyTyped(int slotIndex, char typedChar, int keyCode) {
         }
 

@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import cn.xylose.btw.bettergamesetting.util.OptionHelper;
 import net.minecraft.src.*;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = EntityRenderer.class, priority = 999)
-public abstract class EntityRenderMixin {
+public abstract class EntityRendererMixin {
     @Shadow private float farPlaneDistance;
     @Shadow private Minecraft mc;
     @Shadow float fogColorRed;
@@ -94,7 +95,7 @@ public abstract class EntityRenderMixin {
 
     @ModifyExpressionValue(
             method = "orientCamera",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;fovSetting:F")
+            at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;fovSetting:F", opcode = Opcodes.GETFIELD)
     )
     private float normalizeFovForThirdPersonCameraCollision(float original) {
         return OptionHelper.normalizeValue(original, 30.0F, 110.0F, 1.0F);

@@ -12,7 +12,7 @@ public interface ITextField {
     default void setHint(String hint) {
     }
 
-    default boolean mousePressed(Minecraft client, int x, int y) {
+    default boolean isMouseOver() {
         return false;
     }
 }

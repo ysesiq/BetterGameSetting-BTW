@@ -6,6 +6,8 @@ import cn.xylose.btw.bettergamesetting.config.BGSConfigManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.GameRules;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +17,8 @@ public class BGSClient extends BTWAddon implements ClientModInitializer {
     public static final Map<String, String> DEFAULT_GAMERULE_VALUE = new HashMap<>();
     public static final GameRules gameRules = new GameRules();
     public static Map<String, String> pendingRules = new HashMap<>();
+    public static Logger LOGGER = LogManager.getLogger("BetterGameSetting");
+    public static int scrollAmount = 0;
 
     @Override
     public void postSetup() {
@@ -24,7 +28,6 @@ public class BGSClient extends BTWAddon implements ClientModInitializer {
 
     @Override
     public void preInitialize() {
-//        EnumExtends.buildEnumExtending();
     }
 
     @Override

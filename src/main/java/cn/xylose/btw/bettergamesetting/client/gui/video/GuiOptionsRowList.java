@@ -107,9 +107,9 @@ public class GuiOptionsRowList extends GuiListExtended {
         private final GuiButton buttonLeft;
         private final GuiButton buttonRight;
 
-        public Row(GuiButton p_i45014_1_, GuiButton p_i45014_2_) {
-            this.buttonLeft = p_i45014_1_;
-            this.buttonRight = p_i45014_2_;
+        public Row(GuiButton left, GuiButton right) {
+            this.buttonLeft = left;
+            this.buttonRight = right;
         }
 
         public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {
@@ -154,6 +154,7 @@ public class GuiOptionsRowList extends GuiListExtended {
             }
         }
 
+        @Override
         public void keyTyped(int slotIndex, char typedChar, int keyCode) {
         }
 

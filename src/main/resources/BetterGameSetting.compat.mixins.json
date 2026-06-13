@@ -7,7 +7,8 @@
   "client": [
     "emi.ListWidgetMixin",
     "modmenu.DescriptionListWidgetMixin",
-    "modmenu.EntryListWidgetMixin"
+    "modmenu.EntryListWidgetMixin",
+    "neodymium.NeoChunkMixin"
   ],
   "injectors": {
     "defaultRequire": 1

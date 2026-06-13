@@ -1,7 +1,8 @@
 package cn.xylose.btw.bettergamesetting.mixin.client.gui;
 
 import cn.xylose.btw.bettergamesetting.client.EnumOptionsExtra;
-import cn.xylose.btw.bettergamesetting.api.GuiSlotLanguageInvoker;
+import cn.xylose.btw.bettergamesetting.init.BGSClient;
+import cn.xylose.btw.bettergamesetting.api.IGuiSlotLanguage;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,6 +29,11 @@ public class GuiLanguageMixin extends GuiScreen {
         this.searchField.setMaxStringLength(50);
         this.searchField.setHint(I18n.getString("options.search"));
         return true;
+    }
+
+    @Inject(method = "initGui", at = @At("TAIL"))
+    private void onInitTail(CallbackInfo ci) {
+        this.languageList.func_77208_b(BGSClient.scrollAmount);
     }
 
     @ModifyArg(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiSmallButton;<init>(IIIIILjava/lang/String;)V", ordinal = 1), index = 1)
@@ -80,7 +86,7 @@ public class GuiLanguageMixin extends GuiScreen {
     @Override
     public void keyTyped(char typedChar, int keyCode) {
         if (this.searchField.textboxKeyTyped(typedChar, keyCode)) {
-            ((GuiSlotLanguageInvoker) this.languageList).updateFilteredLanguages(this.searchField.getText());
+            ((IGuiSlotLanguage) this.languageList).updateFilteredLanguages(this.searchField.getText());
         }
     }
 

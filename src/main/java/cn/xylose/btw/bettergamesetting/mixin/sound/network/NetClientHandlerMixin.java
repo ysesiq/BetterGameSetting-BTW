@@ -37,7 +37,7 @@ public class NetClientHandlerMixin {
     @ModifyArg(method = "handleLevelSound", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/src/WorldClient;playSound(DDDLjava/lang/String;FFZ)V"), index = 5)
     private float modifyLevelSoundVolume(float originalVolume) {
-        return originalVolume * this.mc.gameSettings.getBlockVolume();
+        return originalVolume * this.mc.gameSettings.getPlayerVolume();
     }
 
 //    @Redirect(method = "*", at = @At(value = "INVOKE",

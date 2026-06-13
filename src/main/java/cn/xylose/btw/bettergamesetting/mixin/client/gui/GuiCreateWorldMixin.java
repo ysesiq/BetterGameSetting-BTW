@@ -3,6 +3,7 @@ package cn.xylose.btw.bettergamesetting.mixin.client.gui;
 import api.world.difficulty.DifficultyParam;
 import btw.client.gui.LockButton;
 import btw.world.BTWDifficulties;
+import cn.xylose.btw.bettergamesetting.api.IGuiCreateWorld;
 import cn.xylose.btw.bettergamesetting.client.gui.button.GuiTabButton;
 import cn.xylose.btw.bettergamesetting.client.gui.gamerule.GuiGameRules;
 import cn.xylose.btw.bettergamesetting.init.BGSClient;
@@ -20,8 +21,7 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 @Mixin(value = GuiCreateWorld.class, priority = 1001)
-public abstract class GuiCreateWorldMixin extends GuiScreen {
-
+public abstract class GuiCreateWorldMixin extends GuiScreen implements IGuiCreateWorld {
     @Shadow private GuiScreen parentGuiScreen;
     @Shadow private boolean isHardcore;
     @Shadow private String localizedNewWorldText;
@@ -44,6 +44,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     @Shadow private boolean commandsToggled;
     @Shadow private GuiButton moreWorldOptions;
     @Shadow private boolean moreOptions;
+//    @Shadow private GuiButton button_cancel;
     @Shadow private int difficultyID;
     @Shadow private void makeUseableName() {}
     @Shadow protected abstract void updateButtonText();
@@ -147,7 +148,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
         };
 
         for (int i = 0; i < 3; i++) {
-            int xPos = startX + i * (TAB_WIDTH + 1);
+            int xPos = startX + i * (TAB_WIDTH);
             GuiButton tabButton = new GuiTabButton(100 + i, xPos, 4, TAB_WIDTH, TAB_HEIGHT - 4, tabNames[i]);
             tabButtons.add(tabButton);
             this.buttonList.add(tabButton);
@@ -158,23 +159,26 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private void drawTabButton(GuiButton button, Minecraft mc, int mouseX, int mouseY) {
         if (!button.drawButton) return;
 
-        boolean isHovered = mouseX >= button.xPosition && mouseY >= button.yPosition &&
-                mouseX < button.xPosition + button.width && mouseY < button.yPosition + button.height;
         boolean isSelected = currentTab == button.id;
+        int displayY = button.yPosition;
+        int displayHeight = button.height;
 
-        int effectiveHeight = button.height;
-        int yOffset = 0;
         if (isSelected) {
-            effectiveHeight += 4;
-            yOffset = -4;
+            displayY -= 4;
+            displayHeight += 4;
         }
 
-        drawTabBorder(mc, button.xPosition, button.yPosition + yOffset, button.width, effectiveHeight, isSelected, isHovered,
+        boolean isHovered = mouseX >= button.xPosition &&
+                           mouseY >= displayY &&
+                           mouseX < button.xPosition + button.width &&
+                           mouseY < displayY + displayHeight;
+
+        drawTabBorder(mc, button.xPosition, displayY, button.width, displayHeight, isSelected, isHovered,
                 mc.fontRenderer.getStringWidth(button.displayString));
 
         drawCenteredString(mc.fontRenderer, button.displayString,
                 button.xPosition + button.width / 2,
-                button.yPosition + yOffset + (effectiveHeight - 8) / 2,
+                displayY + (displayHeight - 8) / 2,
                 0xFFFFFF);
     }
 
@@ -216,8 +220,8 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private void onUpdateButtonText(CallbackInfo ci) {
         if (this.gameMode.equals("survival") && !BTWDifficulties.DIFFICULTY_LIST.get(this.difficultyID).getParamValue(DifficultyParam.ShouldPlayersHardcoreSpawn.class)) {
             gameMode = "survivalClassic";
-        } else if (this.gameMode.equals("survivalClassic")) {
-            gameMode = "survival";
+//        } else if (this.gameMode.equals("survivalClassic")) {
+//            gameMode = "survival";
         }
         this.buttonGameMode.displayString = I18n.getString("selectWorld.gameMode") + " " +
                 I18n.getString("selectWorld.gameMode." + this.gameMode);
@@ -342,53 +346,49 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
 
     @Unique
     private void drawHoverText(int mouseX, int mouseY) {
-        for (Object obj : this.buttonList) {
-            if (obj instanceof GuiButton button) {
-                if (button.drawButton && mouseX >= button.xPosition && mouseY >= button.yPosition &&
-                        mouseX < button.xPosition + button.width && mouseY < button.yPosition + button.height) {
-
-                    if (button.id >= 100 && button.id <= 102) continue;
-                    if (button.id == 0 || button.id == 1) continue;
-
-                    if (button.id == 2) {
-                        List<String> hoverText = this.getGameModeHoverText();
-                        if (!hoverText.isEmpty()) {
-                            ScreenUtil.getInstance().drawButtonTooltip(hoverText, mouseX, mouseY);
-                            return;
-                        }
-                    }
-
-                    if (button.id == this.buttonDifficultyLevel.id) {
-                        List<String> hoverText = this.getDifficultHoverText();
-                        if (!hoverText.isEmpty()) {
-                            ScreenUtil.getInstance().drawButtonTooltip(hoverText, mouseX, mouseY);
-                            return;
-                        }
-                    }
-
-                    String hoverText = hoverTexts.get(button.id);
-                    if (hoverText != null && !hoverText.isEmpty()) {
-                        ScreenUtil.getInstance().drawButtonTooltip(List.of(hoverText), mouseX, mouseY);
-                        return;
-                    }
+        for (GuiButton button : (List<GuiButton>) this.buttonList) {
+            if (!button.func_82252_a()/*isMouseOver*/) continue;
+            if (button.id >= 100 && button.id <= 102) continue;
+            if (button.id == 0 || button.id == 1) continue;
+            
+            if (button.id == 2) {
+                List<String> hoverText = this.getGameModeHoverText();
+                if (!hoverText.isEmpty()) {
+                    ScreenUtil.getInstance().drawTooltip(hoverText, mouseX, mouseY);
+                    return;
                 }
+            }
+
+            if (button.id == this.buttonDifficultyLevel.id) {
+                List<String> hoverText = this.getDifficultHoverText();
+                if (!hoverText.isEmpty()) {
+                    ScreenUtil.getInstance().drawButtonTooltip(hoverText, mouseX, mouseY);
+                    return;
+                }
+            }
+            
+            String hoverText = hoverTexts.get(button.id);
+            if (hoverText != null && !hoverText.isEmpty()) {
+                ScreenUtil.getInstance().drawTooltip(List.of(hoverText), mouseX, mouseY);
+                return;
             }
         }
         if (currentTab == 100 && textboxWorldName != null) {
-            if (mouseX >= textboxWorldName.xPos && mouseY >= textboxWorldName.yPos &&
-                    mouseX < textboxWorldName.xPos + textboxWorldName.getWidth() && mouseY < textboxWorldName.yPos + textboxWorldName.height) {
-
-                String worldName = textboxWorldName.getText();
-                String hoverText;
-                if (worldName.isEmpty()) {
-                    hoverText = I18n.getStringParams("selectWorld.hover.worldName", I18n.getString("selectWorld.newWorld"));
-                } else {
-                    hoverText = I18n.getStringParams("selectWorld.hover.worldName", worldName);
-                }
-
-                ScreenUtil.getInstance().drawButtonTooltip(Collections.singletonList(hoverText), mouseX, mouseY);
+            if (!textboxWorldName.isMouseOver()) return;
+            String worldName = textboxWorldName.getText();
+            String hoverText;
+            if (worldName.isEmpty()) {
+                hoverText = I18n.getStringParams("selectWorld.hover.worldName", I18n.getString("selectWorld.newWorld"));
+            } else {
+                hoverText = I18n.getStringParams("selectWorld.hover.worldName", worldName);
             }
+            
+            ScreenUtil.getInstance().drawTooltip(Collections.singletonList(hoverText), mouseX, mouseY);
         }
+//        if (currentTab == 101 && textboxSeed != null) {
+//            if (!textboxSeed.isMouseOver()) return;
+//            ScreenUtil.getInstance().drawTooltip(Collections.singletonList(I18n.getString("selectWorld.hover.seed")), mouseX, mouseY);
+//        }
     }
 
     @Unique
@@ -396,8 +396,8 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
         List<String> tooltip = new ArrayList<>();
         if (this.gameMode.equals("survival") && !BTWDifficulties.DIFFICULTY_LIST.get(this.difficultyID).getParamValue(DifficultyParam.ShouldPlayersHardcoreSpawn.class)) {
             gameMode = "survivalClassic";
-        } else if (this.gameMode.equals("survivalClassic")) {
-            gameMode = "survival";
+//        } else if (this.gameMode.equals("survivalClassic")) {
+//            gameMode = "survival";
         }
         for (int i = 1; i < 4; ++i) {
             if (!I18n.getString("selectWorld.gameMode." + gameMode + ".line" + i).equals("selectWorld.gameMode." + gameMode + ".line" + i)) {
@@ -420,7 +420,7 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     }
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
-    private void onActionPerformed(GuiButton button, CallbackInfo ci) {
+    private void onButtonAction(GuiButton button, CallbackInfo ci) {
         if (button.id >= 100 && button.id <= 102) {
             currentTab = button.id;
             updateButtonVisibilityNAbility();
@@ -431,6 +431,11 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             this.mc.displayGuiScreen(new GuiGameRules(this, BGSClient.gameRules));
             ci.cancel();
         }
+
+//        if (button.id == 201) {
+//            this.mc.displayGuiScreen(new GuiExperimentOption(ReflectHelper.dyCast(this)));
+//            ci.cancel();
+//        }
 
         if (button.id == 5) {
             handleWorldTypeSelection();
@@ -449,6 +454,11 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
             this.updateButtonText();
             ci.cancel();
         }
+//
+//        if (button.id == 2) {
+//            updateButtonText();
+//            ci.cancel();
+//        }
 
         if (button.id == 2 || button.id == 4 || button.id == 5 || button.id == 6 || button.id == 7) {
             updateButtonText();
@@ -503,5 +513,22 @@ public abstract class GuiCreateWorldMixin extends GuiScreen {
     private void drawColoredLine(int y, int width, int topColor, int bottomColor) {
         drawRect(0, y, width, y + 1, topColor);
         drawRect(0, y + 1, width, y + 2, bottomColor);
+    }
+
+    // Accessor interface
+    
+    @Override
+    public Map<Integer, String> bgs$getHoverTexts() {
+        return this.hoverTexts;
+    }
+    
+    @Override
+    public int bgs$getCurrentTab() {
+        return this.currentTab;
+    }
+    
+    @Override
+    public List<GuiButton> bgs$getTabButtons() {
+        return this.tabButtons;
     }
 }

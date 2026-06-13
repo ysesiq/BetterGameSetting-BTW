@@ -1,6 +1,7 @@
 package cn.xylose.btw.bettergamesetting.mixin.client.gui;
 
 import cn.xylose.btw.bettergamesetting.config.BGSConfig;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.*;
@@ -72,13 +73,11 @@ public abstract class GuiSlotMixin {
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiSlot;drawSlot(IIIILnet/minecraft/src/Tessellator;)V"))
     private void scissorSlotStart(int j, int f, float par3, CallbackInfo ci) {
-        ScaledResolution sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
-        GL11.glScissor((this.left * sr.getScaleFactor()), (mc.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        ScreenUtil.scissorHead(this.left, this.top, this.right, this.bottom - this.top);
     }
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiSlot;drawSlot(IIIILnet/minecraft/src/Tessellator;)V", shift = At.Shift.AFTER))
     private void scissorSlotEnd(int j, int f, float par3, CallbackInfo ci) {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        ScreenUtil.scissorTail();
     }
 }

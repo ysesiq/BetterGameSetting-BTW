@@ -1,5 +1,48 @@
 # Better Game Setting for BTW
 
+### v1.4.0
+```meme
+你已经有很多功能了，但这一个还没有
+
+你已经有100个功能
+ 了！ 不一样啦！
+😩😄   不一样啦！
+［-］= &*%$&*@#%#&%
+|||| ^&@$%^$#^@$#^
+```
+* 需求BTWCE版本改为3.1.0以上
+* 视频设置界面中的滑块改为松开后生效
+* 渲染距离调整
+  + 实际渲染距离与按钮显示渲染距离一致
+  + 渲染距离上限修改为32个区块
+    - 极其不建议将渲染距离调整为16个区块以上
+    - 占用内存过多，32个区块约占用8至12G内存
+    - 生成新区块卡顿
+    - 保存世界缓慢
+* 创建世界界面调整
+  + tab按钮高度与间距优化
+* 支持mod按键绑定设置按键类别
+  + 示例
+```java
+// 无需依赖BetterGameSetting，但是需要写key.categories.example、key.example和key.categories.example:key.example三个翻译文本
+public static KeyBinding keyExample = new KeyBinding("key.categories.example:key.example", Keyboard.KEY_NONE);
+// 需要依赖BetterGameSetting
+KeyBindingExtra.setKeyKeyCategory(this.keyExample.keyDescription, "key.categories.example");
+```
+* 游戏规则界面添加搜索框与类型
+  + 新增世界内通过世界选项修改
+* 大幅优化切换语言性能，可实现秒切语言
+* 优化了亮度选项的文本显示
+* 修复了部分列表元素超出列表仍然渲染的问题
+* 优化代码
+
+---
+
+### v1.3.0.2 & v1.3.0.3 (by Maro)
+* 修复了使用第三人称视角时的渲染问题
+
+---
+
 ### v1.3.0.1
 * 修复了一些兼容问题
 * 修复了一个无响应问题

@@ -5,9 +5,10 @@ import net.fabricmc.loom.api.processor.SpecContext
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption;
+
 plugins {
 	id 'maven-publish'
-	id 'fabric-loom' version "1.5-SNAPSHOT"
+	id 'fabric-loom' version "1.8-SNAPSHOT"
 }
 
 archivesBaseName = project.archives_base_name
@@ -83,14 +84,15 @@ dependencies {
 
 	implementation 'org.apache.httpcomponents:httpclient:4.5.14'
 
-//	implementation files("libs\\Fabric-ASM-v2.3__.jar")
 	implementation files("libs\\modmenu-10.1.0-dev.jar")
+	implementation files("libs\\neodymium-btw-0.4.1-dev.jar")
 	include(modImplementation("com.github.Chocohead:Fabric-ASM:2.3"))
+	include(modImplementation('com.github.Fallen-Breath.conditional-mixin:conditional-mixin-fabric:0.6.4'))
 }
 
-configurations {
-	compileClasspath.exclude(group: 'net.minecraft', module: 'minecraft-merged')
-}
+//configurations {
+//	compileClasspath.exclude(group: 'net.minecraft', module: 'minecraft-merged')
+//}
 
 configurations.all {
 	resolutionStrategy {
@@ -124,9 +126,6 @@ java {
 jar {
 	from sourceSets.main.output.resourcesDir
 	from sourceSets.main.output.classesDirs
-//	into('META-INF\\jars') {
-//		from("libs\\Fabric-ASM-v2.3.jar")
-//	}
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
@@ -137,12 +136,16 @@ loom {
 	targetCompatibility = JavaVersion.VERSION_17
 }
 
-runClient {
-	dependsOn(jar)
+tasks.named('runClient', JavaExec).configure { exec ->
+	def user = project.hasProperty('username') ? project.username : 'Dev'
+	def width = project.hasProperty('screen_width') ? project.screen_width : '854'
+	def height = project.hasProperty('screen_height') ? project.screen_height : '480'
+	exec.setArgs(['--username', user, '--session', '0', '--width', width, '--height', height])
+	exec.dependsOn(jar)
 }
 
-runServer {
-	dependsOn(jar)
+tasks.named('runServer', JavaExec).configure { exec ->
+	exec.dependsOn(jar)
 }
 
 tasks.register('copyBtwJar', Copy) {

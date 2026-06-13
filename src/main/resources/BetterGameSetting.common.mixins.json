@@ -8,6 +8,10 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "GameRulesMixin"
+    "ChunkTrackerMixin",
+    "DedicatedPlayerListMixin",
+    "GameRulesMixin",
+    "IntegratedServerMixin",
+    "ServerConfigurationManagerMixin"
   ]
 }

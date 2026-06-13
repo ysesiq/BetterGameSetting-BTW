@@ -1,10 +1,12 @@
 package cn.xylose.btw.bettergamesetting.mixin.client.gui;
 
 import cn.xylose.btw.bettergamesetting.api.ITextField;
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import com.github.skystardust.InputMethodBlocker.NativeUtils;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiTextField;
 import net.minecraft.src.Minecraft;
+import net.minecraft.src.ScaledResolution;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,12 +21,9 @@ public abstract class GuiTextFieldMixin implements ITextField {
     @Final @Mutable @Shadow private int width;
     @Final @Mutable @Shadow public int height;
     @Shadow @Final private FontRenderer fontRenderer;
+    @Shadow private boolean visible;
     @Shadow public abstract boolean isFocused();
     @Shadow public abstract String getText();
-
-    @Shadow private boolean isEnabled;
-
-    @Shadow public abstract boolean getVisible();
 
     @Unique private String hint;
 
@@ -41,9 +40,14 @@ public abstract class GuiTextFieldMixin implements ITextField {
     public void setHint(String hint) {
         this.hint = hint;
     }
-
-    public boolean mousePressed(Minecraft client, int x, int y) {
-        return x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
+    
+    public boolean isMouseOver() {
+        if (!this.visible) return false;
+        Minecraft client = Minecraft.getMinecraft();
+        ScaledResolution scaledresolution = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);
+        int mouseX = ScreenUtil.getMouseX(scaledresolution);
+        int mouseY = ScreenUtil.getMouseY(scaledresolution);
+        return mouseX >= this.xPos && mouseY >= this.yPos && mouseX < this.xPos + this.width && mouseY < this.yPos + this.height;
     }
 
     @Inject(method = "drawTextBox", at = @At("TAIL"))

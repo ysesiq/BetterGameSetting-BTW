@@ -1,5 +1,6 @@
 package cn.xylose.btw.bettergamesetting.mixin.compat.modmenu;
 
+import cn.xylose.btw.bettergamesetting.util.ScreenUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.terraformersmc.modmenu.gui.widget.entries.EntryListWidget;
@@ -74,11 +75,9 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lcom/terraformersmc/modmenu/gui/widget/entries/EntryListWidget;renderHoleBackground(IIII)V", ordinal = 1, shift = At.Shift.AFTER))
     private void addRenderList(int mouseX, int mouseY, float tickDelta, CallbackInfo ci, @Local(name = "n4") int n4, @Local(name = "n5") int n5) {
         if (this.client.gameSettings.isTransparentBackground()) {
-            ScaledResolution sr = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);
-            GL11.glScissor(this.left * sr.getScaleFactor(), client.displayHeight - this.bottom * sr.getScaleFactor(), (this.right - this.left) * sr.getScaleFactor(), (this.bottom - this.top) * sr.getScaleFactor());
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            this.renderList(n5, n4, mouseX, mouseY);
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorExecute(this.left, this.top, this.right, this.bottom - this.top, () -> {
+                this.renderList(n5, n4, mouseX, mouseY);
+            });
         }
     }
 
@@ -91,9 +90,7 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
             Gui.drawRect(this.left, this.bottom, this.right, this.bottom + 1, 0xCC000000);
             Gui.drawRect(this.left, this.top - 1, this.right, this.top - 2, 0x66ADB1B1);
             Gui.drawRect(this.left, this.bottom + 1, this.right, this.bottom + 2, 0x66ADB1B1);
-            ScaledResolution sr = new ScaledResolution(client.gameSettings, client.displayWidth, client.displayHeight);
-            GL11.glScissor((this.left * sr.getScaleFactor()), (client.displayHeight - this.bottom * sr.getScaleFactor()), ((this.right - this.left) * sr.getScaleFactor()), ((this.bottom - this.top) * sr.getScaleFactor()));
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorHead(this.left, this.top, this.right, this.bottom - this.top);
         } else {
             instance.bindTexture(resourceLocation);
         }
@@ -107,7 +104,7 @@ public abstract class EntryListWidgetMixin extends GuiSlot {
     @Redirect(method = "renderHoleBackground", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/BufferBuilder;end()I", remap = false), remap = false)
     private int transparentHoleBackgroundEnd(BufferBuilder instance) {
         if (this.client.gameSettings.isTransparentBackground())
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            ScreenUtil.scissorTail();
         else instance.end();
         return 0;
     }
